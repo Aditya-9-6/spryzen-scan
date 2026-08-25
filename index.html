@@ -732,7 +732,7 @@
       <div style="display: flex; gap: 10px; align-items: center;">
         <a href="#benchmarks" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">⚡ Benchmarks</a>
         <a href="#comparison" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">15-Point Comparison</a>
-        <a href="#download" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">💾 Standalone App</a>
+        <a href="#download" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">💾 Standalone App <span style="color: #34d399; font-weight: bold; margin-left: 3px;">(Unlimited)</span></a>
         <a href="https://github.com/Aditya-9-6/Spryzen-Benchmarks" target="_blank" class="btn btn-github" style="padding: 7px 16px; font-size: 11px;">
           📊 Verify Benchmarks Here ➔
         </a>
@@ -760,10 +760,10 @@
       <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin-bottom: 18px;">
         Auto-detects Nginx, Apache, Cloudflare JSON, AWS ALB 29-column, and Envoy logs
       </p>
-      <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 8px; font-family: monospace; font-size: 11px; padding: 5px 16px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s; flex-wrap: wrap; justify-content: center;">
-        <span>🛡️ Free Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans</span>
-        <span style="opacity: 0.4;">|</span>
-        <span style="color: #cbd5e1;">Max <strong>250 MB</strong> / File (Covers <strong>15+ Days</strong> of Logs)</span>
+      <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 8px; font-family: monospace; font-size: 11px; padding: 6px 18px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s; flex-wrap: wrap; justify-content: center;">
+        <span>🛡️ Free Web Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans (Max 250 MB)</span>
+        <span style="opacity: 0.4;">·</span>
+        <a href="#download" style="color: #34d399; font-weight: bold; text-decoration: underline;">Want Unlimited? Get Standalone App ➔</a>
       </div>
       <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
@@ -780,22 +780,24 @@
       <div class="proof-modal" onclick="event.stopPropagation()" style="max-width: 580px; text-align: center;">
         <div style="font-size: 44px; margin-bottom: 12px;">🔒</div>
         <h3 style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 8px;">
-          Daily Free Scan Limit Reached
+          Daily Free Web Limit Reached
         </h3>
         <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
-          You have used all <strong style="color: #fb7185;">5 free community log evaluations</strong> for today. Your quota will reset automatically in 24 hours.
+          You have used all <strong style="color: #fb7185;">5 free web audits</strong> for today. 
         </p>
-        <div style="background: rgba(0, 242, 255, 0.06); border: 1px solid rgba(0, 242, 255, 0.25); border-radius: 14px; padding: 1.25rem; text-align: left; margin-bottom: 24px;">
-          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">🚀 Need Unlimited Enterprise Auditing?</div>
-          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.5;">
-            Deploy the standalone Spryzen on-premise binary to audit unlimited multi-terabyte log archives directly inside your private VPC with zero cloud upload limits.
+        <div style="background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(0,242,255,0.08) 100%); border: 1px solid rgba(16,185,129,0.35); border-radius: 16px; padding: 1.35rem; text-align: left; margin-bottom: 24px;">
+          <div style="font-weight: 800; color: #34d399; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>⚡</span> Get 100% UNLIMITED Offline Scans!
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; margin: 0; line-height: 1.55;">
+            Download the free standalone desktop app to run <strong>unlimited 24/7 audits</strong> on massive multi-terabyte production logs directly from your machine with <strong>zero daily limits, zero accounts, and zero cloud uploads</strong>.
           </p>
         </div>
         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-          <a href="#download" class="btn btn-primary" onclick="closeQuotaModal()" style="font-size: 11px; padding: 10px 20px;">
-            ⚡ Deploy On-Premise Binary
+          <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary" onclick="closeQuotaModal()" style="font-size: 11px; padding: 11px 22px;">
+            💾 Download Standalone App (.zip) — 100% Unlimited
           </a>
-          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;">
+          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 11px 22px;">
             📧 Contact Enterprise Licensing
           </a>
         </div>
@@ -807,22 +809,24 @@
       <div class="proof-modal" onclick="event.stopPropagation()" style="max-width: 580px; text-align: center;">
         <div style="font-size: 44px; margin-bottom: 12px;">📦</div>
         <h3 style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 8px;">
-          File Size Limit Exceeded
+          File Size Limit Exceeded (>250 MB)
         </h3>
         <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
-          Your selected file is <strong style="color: #fb7185;" id="fileSizeDisplay">-- MB</strong>. The free browser scanner supports up to <strong style="color: var(--neon-cyan);">250 MB (covering 15+ days of continuous production logs / ~2,500,000 requests)</strong> in client RAM.
+          Your selected file is <strong style="color: #fb7185;" id="fileSizeDisplay">-- MB</strong>. The free browser scanner supports up to <strong style="color: var(--neon-cyan);">250 MB</strong> in client RAM.
         </p>
-        <div style="background: rgba(0, 242, 255, 0.06); border: 1px solid rgba(0, 242, 255, 0.25); border-radius: 14px; padding: 1.25rem; text-align: left; margin-bottom: 24px;">
-          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">⚡ Need to Audit Multi-Month Archives?</div>
-          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.5;">
-            For historical 10GB–100GB+ multi-month archives, deploy the standalone Spryzen on-premise binary to stream gigabytes per second directly from disk with zero memory ceilings.
+        <div style="background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(0,242,255,0.08) 100%); border: 1px solid rgba(16,185,129,0.35); border-radius: 16px; padding: 1.35rem; text-align: left; margin-bottom: 24px;">
+          <div style="font-weight: 800; color: #34d399; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>⚡</span> Audit Multi-Gigabyte Files Offline!
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; margin: 0; line-height: 1.55;">
+            Download the free standalone desktop app to stream massive <strong>10GB–100GB+ historical log archives</strong> directly from disk at gigabytes per second with <strong>zero file size caps and zero daily limits</strong>.
           </p>
         </div>
         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-          <a href="#download" class="btn btn-primary" onclick="closeFileSizeModal()" style="font-size: 11px; padding: 10px 20px;">
-            💾 Get Standalone Native App
+          <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary" onclick="closeFileSizeModal()" style="font-size: 11px; padding: 11px 22px;">
+            💾 Download Standalone App (.zip) — Unlimited
           </a>
-          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;">
+          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 11px 22px;">
             📧 Enterprise Inquiries
           </a>
         </div>
@@ -1384,14 +1388,19 @@
       </div>
     </div>
 
-    <!-- ─── 3D CTA BANNER ─── -->
+    <!-- ─── 3D CTA BANNER (UNLIMITED OFFLINE APP) ─── -->
     <div class="cta-banner reveal-on-scroll" id="download">
-      <h2>Take Spryzen With You — 100% Free & Air-Gapped</h2>
-      <p>Download the standalone single-file scanner or audit your live production logs on completely disconnected machines.</p>
+      <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 11px; padding: 4px 14px; border-radius: 99px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; margin-bottom: 16px;">
+        ✨ ZERO DAILY LIMITS · ZERO FILE SIZE CAPS · 100% AIR-GAPPED
+      </div>
+      <h2>Take Spryzen With You — 100% Free & Unlimited Offline Scans</h2>
+      <p style="color: #cbd5e1; max-width: 720px; margin: 0 auto 2.5rem auto; font-size: 1.05rem; line-height: 1.65;">
+        Download the standalone desktop application for Windows, macOS, & Linux to audit multi-terabyte production logs with <strong>unlimited daily scans</strong>, <strong>unlimited file sizes</strong>, and <strong>100% offline air-gapped privacy</strong>.
+      </p>
 
       <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary" style="padding: 14px 30px; font-size: 13px;">
-          💾 Download Standalone App (.zip)
+        <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary" style="padding: 14px 32px; font-size: 13px;">
+          💾 Download Standalone App (.zip) — 100% Unlimited
         </a>
         <a href="https://github.com/Aditya-9-6/spryzen-scan" target="_blank" class="btn btn-github" style="padding: 14px 30px; font-size: 13px;">
           ⭐ Star & Fork on GitHub
