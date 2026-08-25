@@ -903,7 +903,20 @@
             <h3 style="font-size: 1.2rem; font-weight: 800;">Identified Exploit Payloads & Proven Tokens</h3>
             <p style="color: #94a3b8; font-size: 11px; font-family: monospace;">Deterministic AST & Cryptographic Verification Proofs</p>
           </div>
-          <button class="btn btn-secondary" onclick="printReport()">🖨️ Print PDF Audit Certificate</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <button class="btn btn-secondary" onclick="exportJSON()" style="font-size: 11px; padding: 7px 14px;">
+              📥 Export JSON
+            </button>
+            <button class="btn btn-secondary" onclick="exportCSV()" style="font-size: 11px; padding: 7px 14px;">
+              📊 Export CSV
+            </button>
+            <button class="btn btn-secondary" onclick="exportSARIF()" style="font-size: 11px; padding: 7px 14px; border-color: rgba(192, 132, 252, 0.4); color: #c084fc;">
+              🛡️ Export SARIF (CI/CD)
+            </button>
+            <button class="btn btn-secondary" onclick="printReport()" style="font-size: 11px; padding: 7px 14px; border-color: rgba(0, 242, 255, 0.4); color: var(--neon-cyan);">
+              🖨️ PDF Certificate
+            </button>
+          </div>
         </div>
         <div class="table-container">
           <table>
@@ -2159,6 +2172,161 @@
       const dateEl = document.getElementById('reportDate');
       if (dateEl) dateEl.innerText = dateStr;
       window.print();
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+    }
+
+    function getTimestampSlug() {
+      const d = new Date();
+      return d.getFullYear() +
+        String(d.getMonth() + 1).padStart(2, '0') +
+        String(d.getDate()).padStart(2, '0') + '_' +
+        String(d.getHours()).padStart(2, '0') +
+        String(d.getMinutes()).padStart(2, '0');
+    }
+
+    function exportJSON() {
+      if (!currentFindings || currentFindings.length === 0) {
+        alert('⚠️ No threat findings available to export.');
+        return;
+      }
+      const totalReqs = document.getElementById('statTotal') ? document.getElementById('statTotal').innerText : '0';
+      const totalIps = document.getElementById('statIps') ? document.getElementById('statIps').innerText : '0';
+
+      const exportData = {
+        audit_report: {
+          generator: "Spryzen Sovereign Threat Inspector v2.6",
+          generated_at: new Date().toISOString(),
+          compliance_standards: ["SOC2 Type II", "ISO 27001", "OWASP Top 10", "CWE/SANS Top 25"],
+          summary: {
+            total_requests_audited: parseInt(totalReqs.replace(/,/g, ''), 10) || 0,
+            total_threats_identified: currentFindings.length,
+            unique_attacker_ips: parseInt(totalIps.replace(/,/g, ''), 10) || 0,
+            audit_seal: currentFindings[0] ? currentFindings[0].proofSeal : 'N/A'
+          },
+          findings: currentFindings.map(function(f, idx) {
+            return {
+              finding_id: idx + 1,
+              attack_vector: f.type,
+              cwe_taxonomy: f.cwe,
+              severity: f.severity,
+              client_ip: f.ip,
+              http_method: f.method,
+              request_uri: f.uri,
+              exploit_token: f.token,
+              ast_syntax_proof: f.syntaxProof,
+              mitigation_rule: f.mitigation,
+              proof_seal: f.proofSeal,
+              raw_log_line: f.rawLine
+            };
+          })
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      downloadBlob(blob, 'spryzen_threat_audit_' + getTimestampSlug() + '.json');
+    }
+
+    function exportCSV() {
+      if (!currentFindings || currentFindings.length === 0) {
+        alert('⚠️ No threat findings available to export.');
+        return;
+      }
+      const headers = ['Finding ID', 'Severity', 'CWE Taxonomy', 'Attack Vector', 'Attacker IP', 'HTTP Method', 'Request URI', 'Exploit Token', 'Deterministic AST Proof', 'Mitigation', 'Proof Seal'];
+      const rows = currentFindings.map(function(f, idx) {
+        return [
+          idx + 1,
+          f.severity,
+          f.cwe,
+          f.type,
+          f.ip,
+          f.method,
+          f.uri,
+          f.token,
+          f.syntaxProof,
+          f.mitigation,
+          f.proofSeal
+        ].map(function(field) {
+          const str = String(field || '').replace(/"/g, '""');
+          return '"' + str + '"';
+        }).join(',');
+      });
+
+      const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      downloadBlob(blob, 'spryzen_threat_audit_' + getTimestampSlug() + '.csv');
+    }
+
+    function exportSARIF() {
+      if (!currentFindings || currentFindings.length === 0) {
+        alert('⚠️ No threat findings available to export.');
+        return;
+      }
+      const sarifData = {
+        $schema: "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        version: "2.1.0",
+        runs: [
+          {
+            tool: {
+              driver: {
+                name: "Spryzen Threat Engine",
+                version: "2.6.0",
+                informationUri: "https://aditya-9-6.github.io/spryzen-scan/",
+                rules: THREAT_PATTERNS.map(function(p) {
+                  return {
+                    id: p.cwe.split('/')[0].trim(),
+                    name: p.type.replace(/[^a-zA-Z0-9]/g, ''),
+                    shortDescription: { text: p.type },
+                    fullDescription: { text: p.syntaxProof },
+                    defaultConfiguration: {
+                      level: p.severity === 'CRITICAL' || p.severity === 'HIGH' ? 'error' : 'warning'
+                    },
+                    helpUri: "https://aditya-9-6.github.io/spryzen-scan/"
+                  };
+                })
+              }
+            },
+            results: currentFindings.map(function(f) {
+              return {
+                ruleId: f.cwe.split('/')[0].trim(),
+                level: f.severity === 'CRITICAL' || f.severity === 'HIGH' ? 'error' : 'warning',
+                message: {
+                  text: f.type + ' detected from attacker IP ' + f.ip + ' against ' + f.method + ' ' + f.uri + '. Malicious token: ' + f.token
+                },
+                locations: [
+                  {
+                    physicalLocation: {
+                      artifactLocation: {
+                        uri: "server.access.log"
+                      }
+                    }
+                  }
+                ],
+                properties: {
+                  attackerIp: f.ip,
+                  httpMethod: f.method,
+                  requestUri: f.uri,
+                  astProof: f.syntaxProof,
+                  mitigation: f.mitigation,
+                  proofSeal: f.proofSeal
+                }
+              };
+            })
+          }
+        ]
+      };
+
+      const blob = new Blob([JSON.stringify(sarifData, null, 2)], { type: 'application/json' });
+      downloadBlob(blob, 'spryzen_threat_audit_' + getTimestampSlug() + '.sarif');
     }
 
     function runLiveStressTest() {
