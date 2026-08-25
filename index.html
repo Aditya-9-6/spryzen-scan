@@ -184,11 +184,29 @@
       box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.2);
       transition: all 0.4s cubic-bezier(0.1, 1, 0.1, 1);
       position: relative;
+      overflow: hidden;
     }
     .glass-card:hover {
       border-color: rgba(0, 242, 255, 0.45);
       box-shadow: 0 35px 70px -15px rgba(0, 242, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
       transform: translateY(-2px);
+    }
+
+    /* Subtle On-Screen Watermark inside Results Card */
+    .screen-watermark {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-8deg);
+      width: 380px;
+      height: 380px;
+      background-image: url('assets/logo.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
     }
 
     /* 3D Upload Zone */
@@ -268,7 +286,7 @@
     .stat-val { font-size: 2.2rem; font-weight: 900; margin-top: 6px; font-family: monospace; }
 
     /* Results Table */
-    .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--glass-border); }
+    .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--glass-border); position: relative; z-index: 1; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-family: monospace; font-size: 12px; }
     th { background: rgba(255, 255, 255, 0.06); padding: 14px 18px; color: #94a3b8; text-transform: uppercase; font-size: 11px; border-bottom: 1px solid var(--glass-border); }
     td { padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
@@ -370,7 +388,7 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════════════════
-       PRINT AUDIT REPORT ENGINE (Crisp PDF Certificate Mode)
+       PRINT AUDIT REPORT ENGINE (Crisp PDF Certificate & Watermark Mode)
        ═══════════════════════════════════════════════════════════════════════════ */
     @media print {
       body {
@@ -383,7 +401,26 @@
         display: none !important;
       }
       .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-      #results { display: block !important; }
+      #results { display: block !important; position: relative !important; }
+
+      /* Full-Page Watermark in Printed Certificate */
+      .print-watermark {
+        display: block !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(-12deg) !important;
+        width: 480px !important;
+        height: 480px !important;
+        background-image: url('assets/logo.jpg') !important;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+        background-size: contain !important;
+        opacity: 0.08 !important;
+        pointer-events: none !important;
+        z-index: 0 !important;
+      }
+
       .print-header-block {
         display: flex !important;
         justify-content: space-between;
@@ -391,6 +428,8 @@
         border-bottom: 2px solid #0f172a;
         padding-bottom: 1.25rem;
         margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
       }
       .print-logo-wrap {
         display: flex;
@@ -407,6 +446,8 @@
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 1rem !important;
         margin-bottom: 1.5rem !important;
+        position: relative;
+        z-index: 1;
       }
       .stat-card {
         background: #f8fafc !important;
@@ -418,15 +459,18 @@
       .stat-label { color: #64748b !important; }
       .stat-val { color: #0f172a !important; font-size: 1.6rem !important; }
       .glass-card {
-        background: #ffffff !important;
+        background: transparent !important;
         border: 1px solid #e2e8f0 !important;
         box-shadow: none !important;
         padding: 0 !important;
+        position: relative;
+        z-index: 1;
       }
       .table-container { border: 1px solid #cbd5e1 !important; border-radius: 0 !important; }
       table {
         color: #0f172a !important;
-        font-size: 10.5px !important;
+        font-size: 10px !important;
+        width: 100% !important;
       }
       th {
         background: #f1f5f9 !important;
@@ -450,6 +494,8 @@
         font-size: 10px;
         color: #64748b;
         font-family: monospace;
+        position: relative;
+        z-index: 1;
       }
     }
   </style>
@@ -521,10 +567,13 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════════
-         RESULTS & PRINT AUDIT CERTIFICATE REPORT
+         RESULTS & PRINT AUDIT CERTIFICATE REPORT (WITH WATERMARK)
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div id="results" class="hidden">
       
+      <!-- Full Page Watermark for Print & PDF Export -->
+      <div class="print-watermark" style="display: none;"></div>
+
       <!-- Print Audit Header (Visible during Print / PDF Export) -->
       <div class="print-header-block" style="display: none;">
         <div class="print-logo-wrap">
@@ -570,7 +619,10 @@
       </div>
 
       <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px;">
+        <!-- On-Screen Subtle Watermark -->
+        <div class="screen-watermark"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px; position: relative; z-index: 1;">
           <div>
             <h3 style="font-size: 1.2rem; font-weight: 800;">Identified Exploit Payloads & Proven Tokens</h3>
             <p style="color: #94a3b8; font-size: 11px; font-family: monospace;">Cryptographic Verification Proofs</p>
@@ -581,11 +633,11 @@
           <table>
             <thead>
               <tr>
-                <th>Severity</th>
-                <th>Attack Vector</th>
-                <th>Attacker IP</th>
-                <th>Request URI</th>
-                <th>Spryzen Defense Mitigation</th>
+                <th style="width: 12%;">Severity</th>
+                <th style="width: 22%;">Attack Vector</th>
+                <th style="width: 16%;">Attacker IP</th>
+                <th style="width: 25%;">Request URI</th>
+                <th style="width: 25%;">Spryzen Defense Mitigation</th>
               </tr>
             </thead>
             <tbody id="threatTableBody"></tbody>
@@ -1300,7 +1352,11 @@
     ].join('\n');
 
     function processText(text) {
-      const lines = text.split('\n').filter(function(l) { return l.trim().length > 0; });
+      // Filter out comments starting with # or // and empty lines
+      const lines = text.split('\n')
+        .map(function(l) { return l.trim(); })
+        .filter(function(l) { return l.length > 0 && !l.startsWith('#') && !l.startsWith('//'); });
+      
       const findings = [];
       const ips = new Set();
 
@@ -1341,7 +1397,7 @@
           '<td><span class="tag ' + tagClass + '">' + f.severity + '</span></td>' +
           '<td style="font-weight: bold; color: #fff;">' + f.type + '</td>' +
           '<td style="color: var(--neon-cyan);">' + f.ip + '</td>' +
-          '<td style="color: #cbd5e1;"><code>' + f.method + '</code> ' + f.uri + '</td>' +
+          '<td style="color: #cbd5e1; word-break: break-all;"><code>' + f.method + '</code> ' + f.uri + '</td>' +
           '<td style="color: #34d399; font-size: 11px;">' + f.mitigation + '</td>' +
         '</tr>';
       }).join('');
