@@ -153,7 +153,7 @@
         ⚡ <span>Spryzen</span> Scan
       </a>
       <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="#comparison" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">Exhaustive Comparison</a>
+        <a href="#comparison" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">16-Point Comparison</a>
         <a href="#download" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">💾 Standalone App</a>
         <a href="https://github.com/Aditya-9-6/spryzen-scan" target="_blank" class="btn btn-github" style="padding: 6px 14px; font-size: 11px;">
           ⭐ Star on GitHub
@@ -248,7 +248,7 @@
     <div class="grid-3">
       <div class="feature-card">
         <div class="feature-icon">⚡</div>
-        <h3>0.4ms SIMD WAF Kernel</h3>
+        <h3>0.4ms SIMD Inspection Engine</h3>
         <p>Vector-accelerated regex and AST grammar normalization unrolls multi-layer encoding and null-byte splices in volatile RAM.</p>
       </div>
 
@@ -260,14 +260,14 @@
 
       <div class="feature-card">
         <div class="feature-icon">🔒</div>
-        <h3>100% Air-Gapped Privacy</h3>
+        <h3>100% Air-Gapped Sovereign Privacy</h3>
         <p>Runs entirely on your local hardware or private VPC. No customer logs, cookies, or telemetry ever leave your security perimeter.</p>
       </div>
     </div>
 
-    <!-- ─── MARKETING SECTION 2: EXHAUSTIVE COMPARISON MATRIX ─── -->
+    <!-- ─── MARKETING SECTION 2: EXHAUSTIVE 16-POINT COMPARISON MATRIX ─── -->
     <div class="section-title" id="comparison">
-      <h2>Exhaustive Security & Architectural Comparison</h2>
+      <h2>Exhaustive 16-Point Security & Architectural Comparison</h2>
       <p>Comprehensive vector-by-vector breakdown across traditional, cloud, and next-gen firewalls.</p>
     </div>
 
@@ -284,8 +284,8 @@
         <tbody>
           <tr>
             <td>
-              <strong>AI Prompt Injections & Jailbreaks</strong>
-              <span class="subtext">DAN mode, role overrides, system leaks</span>
+              <strong>1. AI Prompt Injections & Jailbreaks</strong>
+              <span class="subtext">DAN mode, role overrides, system prompt leaks</span>
             </td>
             <td class="col-spryzen">
               <div class="check">✅ 100% Native Interception</div>
@@ -297,13 +297,13 @@
             </td>
             <td>
               <div class="cross">❌ Blind</div>
-              <span class="subtext">Requires heavy external Bedrock add-on</span>
+              <span class="subtext">Requires external Bedrock add-on</span>
             </td>
           </tr>
 
           <tr>
             <td>
-              <strong>Zero-Day Obfuscation (Polymorphic SQLi)</strong>
+              <strong>2. Zero-Day Polymorphic SQLi</strong>
               <span class="subtext">Double-encoding, comment splices (%2527, UN/**/ION)</span>
             </td>
             <td class="col-spryzen">
@@ -322,8 +322,8 @@
 
           <tr>
             <td>
-              <strong>Data Privacy & Air-Gapped SCIF Execution</strong>
-              <span class="subtext">Compliance: GDPR, HIPAA, SOC-2 Type II</span>
+              <strong>3. Data Privacy & Air-Gapped Compliance</strong>
+              <span class="subtext">Compliance: GDPR, HIPAA, SOC-2 Type II, RBI</span>
             </td>
             <td class="col-spryzen">
               <div class="check">✅ 100% Sovereign (0 Cloud Uploads)</div>
@@ -341,11 +341,11 @@
 
           <tr>
             <td>
-              <strong>Inspection Latency & Performance</strong>
+              <strong>4. Inspection Latency Overhead</strong>
               <span class="subtext">Overhead added to each HTTP request</span>
             </td>
             <td class="col-spryzen">
-              <div class="check">⚡ &lt; 0.4ms (Pingora Rust Core)</div>
+              <div class="check">⚡ &lt; 0.4ms Line-Rate Inspection</div>
               <span class="subtext">Zero GC pauses, zero thread thrashing</span>
             </td>
             <td>
@@ -360,11 +360,11 @@
 
           <tr>
             <td>
-              <strong>GraphQL Depth & Introspection Protection</strong>
+              <strong>5. GraphQL Depth & Introspection Protection</strong>
               <span class="subtext">Schema extraction and recursive depth bombs</span>
             </td>
             <td class="col-spryzen">
-              <div class="check">✅ Native AST Query Complexity Blocker</div>
+              <div class="check">✅ Native AST Complexity Blocker</div>
               <span class="subtext">Enforces depth limit without manual rules</span>
             </td>
             <td>
@@ -379,7 +379,7 @@
 
           <tr>
             <td>
-              <strong>Cloud Metadata SSRF Pivot Protection</strong>
+              <strong>6. Cloud Metadata SSRF Pivot Protection</strong>
               <span class="subtext">Decimal/Hex IP encodings (2852039166, 0xa9.0xfe...)</span>
             </td>
             <td class="col-spryzen">
@@ -398,7 +398,7 @@
 
           <tr>
             <td>
-              <strong>False Positive Rate on Legitimate Queries</strong>
+              <strong>7. False Positive Rate on Clean Queries</strong>
               <span class="subtext">e.g. Searching "Union Bank", product categories</span>
             </td>
             <td class="col-spryzen">
@@ -417,7 +417,7 @@
 
           <tr>
             <td>
-              <strong>Offline Log Threat Scanner (Browser-Based)</strong>
+              <strong>8. Offline Log Threat Scanner (Browser-Based)</strong>
               <span class="subtext">Zero-dependency client-side log auditing</span>
             </td>
             <td class="col-spryzen">
@@ -436,12 +436,12 @@
 
           <tr>
             <td>
-              <strong>Bot & Scraper Defense</strong>
+              <strong>9. Bot & Scraper Defense</strong>
               <span class="subtext">Headless browser detection & credential stuffing</span>
             </td>
             <td class="col-spryzen">
               <div class="check">✅ Ghost Engine (Zero CAPTCHAs)</div>
-              <span class="subtext">Hardware biometric dynamics in &lt;1ms</span>
+              <span class="subtext">Biometric dynamics in &lt;1ms</span>
             </td>
             <td>
               <div class="partial">⚠️ Turnstile / Interstitial CAPTCHA</div>
@@ -455,7 +455,7 @@
 
           <tr>
             <td>
-              <strong>Attacker Deception & Honeypot Matrix</strong>
+              <strong>10. Attacker Deception & Honeypot Matrix</strong>
               <span class="subtext">Wasting automated bot compute with synthetic mirrors</span>
             </td>
             <td class="col-spryzen">
@@ -469,6 +469,120 @@
             <td>
               <div class="cross">❌ Static 403 Block</div>
               <span class="subtext">No active deception capabilities</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>11. WebSocket & Full-Duplex Stream Inspection</strong>
+              <span class="subtext">Real-time bi-directional frame inspection</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ Live Frame-by-Frame Filter</div>
+              <span class="subtext">Inspects binary & text frames in-flight</span>
+            </td>
+            <td>
+              <div class="partial">⚠️ Handshake Only</div>
+              <span class="subtext">Blind to payloads after upgrade handshake</span>
+            </td>
+            <td>
+              <div class="cross">❌ Blind Pass-Through</div>
+              <span class="subtext">No deep WebSocket frame parsing</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>12. API Contract & OpenAPI Schema Enforcement</strong>
+              <span class="subtext">Strict payload parameter typing & boundary validation</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ Real-Time In-Line Validation</div>
+              <span class="subtext">Rejects parameter tampering instantly</span>
+            </td>
+            <td>
+              <div class="partial">⚠️ API Shield Add-On</div>
+              <span class="subtext">Requires Enterprise Tier contract</span>
+            </td>
+            <td>
+              <div class="cross">❌ Manual Lambda Rules</div>
+              <span class="subtext">High latency overhead per request</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>13. Zero-Downtime Hot-Reloading</strong>
+              <span class="subtext">Deploying new threat signatures & security rules</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ Instant Hotpatching (&lt;1ms)</div>
+              <span class="subtext">Zero dropped TCP connections</span>
+            </td>
+            <td>
+              <div class="partial">⚠️ 30s – 120s Edge Propagation</div>
+              <span class="subtext">Global CDN propagation lag</span>
+            </td>
+            <td>
+              <div class="partial">⚠️ 60s – 180s Deployment Delay</div>
+              <span class="subtext">AWS CloudFormation / Console lag</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>14. Tamper-Evident Audit Verification</strong>
+              <span class="subtext">Non-editable proof certificates for compliance auditors</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ Cryptographic SHA-256 Seal</div>
+              <span class="subtext">Digital signature with permanent watermark</span>
+            </td>
+            <td>
+              <div class="cross">❌ Raw Text Log Dumps</div>
+              <span class="subtext">Unsigned, easily edited plain text</span>
+            </td>
+            <td>
+              <div class="cross">❌ CloudWatch Raw Logs</div>
+              <span class="subtext">Requires custom parsing scripts</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>15. Vendor Lock-in & Egress Bandwidth Taxes</strong>
+              <span class="subtext">Freedom to run anywhere (Bare-metal, Multi-Cloud, K8s)</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ 100% Platform Agnostic</div>
+              <span class="subtext">$0 egress fees · Run anywhere</span>
+            </td>
+            <td>
+              <div class="cross">❌ Proprietary Cloud Lock-In</div>
+              <span class="subtext">Requires DNS and SSL proxy lock-in</span>
+            </td>
+            <td>
+              <div class="cross">❌ AWS Ecosystem Lock-In</div>
+              <span class="subtext">Heavy data transfer egress pricing</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>16. Pricing Predictability & Infrastructure Cost</strong>
+              <span class="subtext">Predictable operational budget without surprise bills</span>
+            </td>
+            <td class="col-spryzen">
+              <div class="check">✅ Transparent Fixed Licensing</div>
+              <span class="subtext">Zero bandwidth penalty taxes</span>
+            </td>
+            <td>
+              <div class="cross">❌ $3,000 – $10,000+/mo Enterprise</div>
+              <span class="subtext">Overage charges on traffic surges</span>
+            </td>
+            <td>
+              <div class="partial">⚠️ Rule + Request Consumption Meter</div>
+              <span class="subtext">Bills multiply during DDoS attacks</span>
             </td>
           </tr>
         </tbody>
