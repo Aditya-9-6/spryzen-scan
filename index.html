@@ -763,7 +763,7 @@
       <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 8px; font-family: monospace; font-size: 11px; padding: 5px 16px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s; flex-wrap: wrap; justify-content: center;">
         <span>🛡️ Free Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans</span>
         <span style="opacity: 0.4;">|</span>
-        <span style="color: #cbd5e1;">Max <strong>50 MB</strong> / File</span>
+        <span style="color: #cbd5e1;">Max <strong>250 MB</strong> / File (Covers <strong>15+ Days</strong> of Logs)</span>
       </div>
       <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
@@ -810,12 +810,12 @@
           File Size Limit Exceeded
         </h3>
         <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
-          Your selected file is <strong style="color: #fb7185;" id="fileSizeDisplay">-- MB</strong>. The free client-side browser scanner supports log files up to <strong style="color: var(--neon-cyan);">50 MB (~500,000 requests)</strong> to maintain sub-millisecond memory performance.
+          Your selected file is <strong style="color: #fb7185;" id="fileSizeDisplay">-- MB</strong>. The free browser scanner supports up to <strong style="color: var(--neon-cyan);">250 MB (covering 15+ days of continuous production logs / ~2,500,000 requests)</strong> in client RAM.
         </p>
         <div style="background: rgba(0, 242, 255, 0.06); border: 1px solid rgba(0, 242, 255, 0.25); border-radius: 14px; padding: 1.25rem; text-align: left; margin-bottom: 24px;">
-          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">⚡ Audit Multi-Gigabyte Files Offline</div>
+          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">⚡ Need to Audit Multi-Month Archives?</div>
           <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.5;">
-            For massive 10GB–100GB production archives, run the Spryzen native CLI or on-premise binary to stream gigabytes per second directly from disk.
+            For historical 10GB–100GB+ multi-month archives, deploy the standalone Spryzen on-premise binary to stream gigabytes per second directly from disk with zero memory ceilings.
           </p>
         </div>
         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
@@ -2007,7 +2007,7 @@
 
     updateQuotaUI();
 
-    const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB Free Browser Quota
+    const MAX_FILE_SIZE_BYTES = 250 * 1024 * 1024; // 250 MB Free Browser Quota (Covers 15+ Days of Logs)
 
     function showFileSizeModal(sizeBytes) {
       const sizeMB = (sizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
