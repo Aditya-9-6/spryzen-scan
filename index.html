@@ -1367,7 +1367,7 @@
     // ── Threat Signatures & Parser Engine ──
     const THREAT_PATTERNS = [
       { type: 'AI Prompt Injection & Jailbreak', severity: 'CRITICAL', regex: /(ignore\s+(all\s+)?(previous|prior|above)\s+instructions|system\s+prompt|dan\s+mode|jailbreak|output\s+all\s+rules|reveal\s+your\s+hidden\s+prompt|role:\s*system|assistant:\s*override|base64_decode\s*\(|human:\s*ignore)/i, mitigation: 'Spryzen Ouroboros AI Guardrail tokenizes prompts and blocks jailbreak vectors in <0.6ms.' },
-      { type: 'SQL Injection (SQLi)', severity: 'CRITICAL', regex: /(union\s+select|select\s+.*\s+from|insert\s+into|drop\s+table|information_schema|or\s+['"]?1['"]?\s*=\s*['"]?1|sleep\(\d+\)|benchmark\(\d+,|--|\/\*|'\s*or\s*'\w+'\s*=\s*'\w+|%2527|%2520OR|0x27204f52|UN\/\*\*\/ION|CHAR\(\d+)/i, mitigation: 'Spryzen SIMD WAF vector-filters SQL keywords in <0.4ms.' },
+      { type: 'SQL Injection (SQLi)', severity: 'CRITICAL', regex: /(union\s+select|select\s+.*\s+from|insert\s+into|drop\s+table|information_schema|or\s+['"]?1['"]?\s*=\s*['"]?1|sleep\(\d+\)|benchmark\(\d+,|(['"`\d]\s*--|--\s+|--\+|--\-|\/\*.*\*\/|;\s*--)|'\s*or\s*'\w+'\s*=\s*'\w+|%2527|%2520OR|0x27204f52|UN\/\*\*\/ION|CHAR\(\d+)/i, mitigation: 'Spryzen SIMD WAF vector-filters SQL keywords in <0.4ms.' },
       { type: 'Cross-Site Scripting (XSS)', severity: 'HIGH', regex: /(<script|javascript:|onerror=|onload=|document\.cookie|eval\(|String\.fromCharCode|<svg\/onload|alert\(|window\.location|data:text\/html)/i, mitigation: 'Spryzen XSS Sanitizer strips active DOM tags.' },
       { type: 'Remote Code Execution (RCE)', severity: 'CRITICAL', regex: /(;\s*(cat|nc|curl|wget|bash|sh|chmod|kill|system|exec|passthru|php:\/\/input)|`.*`|\$\(.*\)|powershell\.exe|cmd\.exe|2>&1|bash\s+-i)/i, mitigation: 'Spryzen System Sandbox drops command injection attempts.' },
       { type: 'GraphQL Introspection & Depth Exploit', severity: 'HIGH', regex: /(__schema|__type|Query\s*\{|mutation\s*\{.*__schema|batch_query)/i, mitigation: 'Spryzen API Gateway blocks unauthorized introspection.' },
@@ -1390,22 +1390,48 @@
     ].join('\n');
 
     function processText(text) {
-      // Filter out comments starting with # or // and empty lines
-      const lines = text.split('\n')
-        .map(function(l) { return l.trim(); })
-        .filter(function(l) { return l.length > 0 && !l.startsWith('#') && !l.startsWith('//'); });
-      
+      const rawLines = text.split('\n');
+      const validLines = [];
       const findings = [];
       const ips = new Set();
 
-      lines.forEach(function(line, idx) {
-        const ipMatch = line.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
-        const ip = ipMatch ? ipMatch[1] : ('192.168.1.' + ((idx % 100) + 1));
-        ips.add(ip);
+      rawLines.forEach(function(rawLine, idx) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#') || line.startsWith('//') || /^[=\-_*~#]{2,}$/.test(line)) {
+          return;
+        }
 
-        const methodMatch = line.match(/"(GET|POST|PUT|DELETE|PATCH)\s+([^"\s]+)/);
-        const method = methodMatch ? methodMatch[1] : 'GET';
-        const uri = methodMatch ? methodMatch[2] : line.slice(0, 50);
+        const methodMatch = line.match(/"(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+([^"\s]+)/i) ||
+                            line.match(/\b(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+(\/[^\s]*)/i);
+        
+        let method = 'GET';
+        let uri = '';
+        let ip = '';
+
+        const ipMatch = line.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
+        if (ipMatch) {
+          ip = ipMatch[1];
+          ips.add(ip);
+        }
+
+        if (methodMatch) {
+          method = methodMatch[1].toUpperCase();
+          uri = methodMatch[2];
+        } else if (line.includes('HTTP/1.') || line.includes('HTTP/2') || line.includes('HTTP/3')) {
+          const parts = line.split(/\s+/);
+          uri = parts[1] || line.slice(0, 50);
+        } else if (ipMatch) {
+          uri = line.slice(0, 50);
+        } else {
+          return;
+        }
+
+        if (!ip) {
+          ip = '192.168.1.' + ((idx % 100) + 1);
+          ips.add(ip);
+        }
+
+        validLines.push(line);
 
         let normalizedLine = line;
         try {
@@ -1424,7 +1450,12 @@
         }
       });
 
-      document.getElementById('statTotal').innerText = lines.length.toLocaleString();
+      if (validLines.length === 0) {
+        alert('⚠️ No valid HTTP server access log records found in this file. Please upload standard server access logs (Nginx, Apache, Cloudflare, AWS, etc.) or click "Load Attack Sample".');
+        return;
+      }
+
+      document.getElementById('statTotal').innerText = validLines.length.toLocaleString();
       document.getElementById('statThreats').innerText = findings.length.toLocaleString();
       document.getElementById('statIps').innerText = ips.size.toLocaleString();
 
