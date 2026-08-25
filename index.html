@@ -3,168 +3,350 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spryzen - Offline Server Log Threat Inspector & AI Guardrail</title>
-  <meta name="description" content="100% Client-Side Air-Gapped Server Log Threat Inspector. Detect SQLi, XSS, RCE, and AI Prompt Injections locally in your browser with zero data uploads." />
+  <title>Spryzen - Next-Gen 3D Offline Threat Inspector & AI Guardrail</title>
+  <meta name="description" content="100% Client-Side 3D Air-Gapped Log Inspector. Detect SQLi, XSS, RCE, and AI Prompt Injections locally in your browser with zero data uploads." />
   <style>
     :root {
-      --bg-void: #050811;
-      --bg-card: #0a0f1d;
-      --bg-card-hover: #0f172a;
+      --bg-void: #030611;
+      --bg-card: rgba(10, 16, 32, 0.65);
+      --bg-card-hover: rgba(15, 23, 42, 0.85);
       --neon-cyan: #00f2ff;
-      --neon-cyan-dim: rgba(0, 242, 255, 0.1);
+      --neon-cyan-glow: rgba(0, 242, 255, 0.4);
       --neon-purple: #a855f7;
+      --neon-purple-glow: rgba(168, 85, 247, 0.4);
       --neon-red: #ef4444;
       --neon-emerald: #10b981;
       --neon-amber: #f59e0b;
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-glow: rgba(0, 242, 255, 0.3);
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       background-color: var(--bg-void);
       color: var(--text-primary);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.6;
-      padding: 0;
+      overflow-x: hidden;
+      position: relative;
     }
+
+    /* 3D Background Canvas & Ambient Aura */
+    #canvas3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .aura-spotlight {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 50%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: -1;
+      transition: transform 0.2s cubic-bezier(0.1, 1, 0.1, 1);
+    }
+    .ambient-orb-1 {
+      position: fixed;
+      top: 10%;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%);
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: -1;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+    .ambient-orb-2 {
+      position: fixed;
+      bottom: 10%;
+      right: -150px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 255, 0.12), transparent 70%);
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: -1;
+      animation: floatOrb 15s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes floatOrb {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(60px) scale(1.15); }
+    }
+
+    /* Glassmorphic Navigation */
     .nav {
-      border-bottom: 1px solid var(--glass-border);
-      background: rgba(5, 8, 17, 0.85);
-      backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 40;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(3, 6, 17, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky; top: 0; z-index: 50;
       padding: 1rem 1.5rem;
+      transition: all 0.3s;
     }
     .nav-inner {
       max-width: 1200px; margin: 0 auto;
       display: flex; justify-content: space-between; align-items: center;
     }
     .logo {
-      display: flex; align-items: center; gap: 8px; font-weight: 900;
-      font-size: 1.2rem; text-decoration: none; color: #fff;
+      display: flex; align-items: center; gap: 10px; font-weight: 900;
+      font-size: 1.25rem; text-decoration: none; color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; box-shadow: 0 0 15px var(--neon-cyan-glow);
     }
     .logo span { color: var(--neon-cyan); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; }
-    .header { text-align: center; margin-bottom: 2.5rem; }
-    h1 { font-size: 2.75rem; font-weight: 900; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; position: relative; }
+    
+    /* 3D Hero Section */
+    .hero {
+      text-align: center; margin-bottom: 3.5rem;
+      perspective: 1000px;
+    }
+    h1 {
+      font-size: 3.4rem; font-weight: 900; margin-bottom: 1rem;
+      letter-spacing: -0.03em; line-height: 1.15;
+    }
     h1 span {
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      background: linear-gradient(135deg, #00f2ff 0%, #38bdf8 50%, #c084fc 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(0, 242, 255, 0.3);
     }
-    p.lead { color: var(--text-secondary); font-size: 1.05rem; max-width: 760px; margin: 0 auto; }
-    .card {
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 2rem; margin-bottom: 2.5rem;
-      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    p.lead {
+      color: var(--text-secondary); font-size: 1.15rem; max-width: 780px; margin: 0 auto;
+      line-height: 1.7;
     }
+
+    /* Glassmorphism Luxury Cards */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 24px;
+      padding: 2.25rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      transition: transform 0.4s cubic-bezier(0.1, 1, 0.1, 1), border-color 0.3s, box-shadow 0.4s;
+    }
+    .glass-card:hover {
+      border-color: var(--glass-border-glow);
+      box-shadow: 0 30px 60px -15px rgba(0, 242, 255, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    /* 3D Upload Zone */
     .upload-zone {
-      border: 2px dashed rgba(0, 242, 255, 0.35); border-radius: 20px;
-      padding: 3.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.25s ease;
-      background: rgba(255, 255, 255, 0.01);
+      border: 2px dashed rgba(0, 242, 255, 0.35); border-radius: 24px;
+      padding: 4rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.1, 1, 0.1, 1);
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.03) 0%, transparent 70%);
+      position: relative; overflow: hidden;
     }
-    .upload-zone:hover { border-color: var(--neon-cyan); background: rgba(0, 242, 255, 0.03); transform: translateY(-2px); }
+    .upload-zone:hover {
+      border-color: var(--neon-cyan);
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.08) 0%, transparent 80%);
+      transform: translateY(-4px) scale(1.005);
+      box-shadow: 0 20px 40px -10px rgba(0, 242, 255, 0.2);
+    }
+    .shield-3d-icon {
+      font-size: 56px; margin-bottom: 16px; display: inline-block;
+      animation: pulseShield 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px var(--neon-cyan-glow));
+    }
+    @keyframes pulseShield {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.08) rotate(3deg); }
+    }
+
+    /* Buttons with Gloss & Glow */
     .btn {
-      padding: 12px 24px; border-radius: 12px; font-family: monospace; font-size: 12px;
-      font-weight: bold; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex;
-      align-items: center; gap: 8px; text-decoration: none;
+      padding: 12px 26px; border-radius: 14px; font-family: monospace; font-size: 12px;
+      font-weight: 800; cursor: pointer; border: none; transition: all 0.25s cubic-bezier(0.1, 1, 0.1, 1);
+      display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+      position: relative; overflow: hidden;
     }
-    .btn-primary { background: var(--neon-cyan); color: #000; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.25); }
-    .btn-primary:hover { background: #38bdf8; transform: scale(1.02); }
-    .btn-secondary { background: rgba(255,255,255,0.06); color: #fff; border: 1px solid var(--glass-border); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
-    .btn-github { background: #24292e; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-    .btn-github:hover { background: #2f363d; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-    .stat-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1.5rem; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-cyan) 0%, #38bdf8 100%);
+      color: #030611;
+      box-shadow: 0 4px 20px rgba(0, 242, 255, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 30px rgba(0, 242, 255, 0.55);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--neon-cyan);
+      transform: translateY(-2px);
+    }
+    .btn-github {
+      background: rgba(20, 25, 45, 0.8);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    .btn-github:hover {
+      background: rgba(30, 40, 70, 0.9);
+      border-color: var(--neon-purple);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Stats Grid */
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px; padding: 1.5rem;
+      backdrop-filter: blur(16px);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-3px); border-color: rgba(0, 242, 255, 0.3); }
     .stat-label { font-size: 11px; text-transform: uppercase; font-family: monospace; color: var(--text-secondary); }
-    .stat-val { font-size: 2rem; font-weight: 900; margin-top: 6px; font-family: monospace; }
-    .table-container { overflow-x: auto; border-radius: 14px; border: 1px solid var(--glass-border); }
+    .stat-val { font-size: 2.2rem; font-weight: 900; margin-top: 6px; font-family: monospace; }
+
+    /* Results Table */
+    .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--glass-border); }
     table { width: 100%; border-collapse: collapse; text-align: left; font-family: monospace; font-size: 12px; }
-    th { background: rgba(255,255,255,0.04); padding: 14px 16px; color: var(--text-secondary); text-transform: uppercase; font-size: 11px; border-bottom: 1px solid var(--glass-border); }
-    td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    tr:hover { background: rgba(255,255,255,0.02); }
-    .tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-    .tag-critical { background: rgba(239, 68, 68, 0.2); color: var(--neon-red); border: 1px solid rgba(239, 68, 68, 0.3); }
-    .tag-high { background: rgba(245, 158, 11, 0.2); color: var(--neon-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
-    .tag-medium { background: rgba(168, 85, 247, 0.2); color: var(--neon-purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+    th { background: rgba(255, 255, 255, 0.05); padding: 14px 18px; color: var(--text-secondary); text-transform: uppercase; font-size: 11px; border-bottom: 1px solid var(--glass-border); }
+    td { padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+    tr:hover { background: rgba(255, 255, 255, 0.03); }
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+    .tag-critical { background: rgba(239, 68, 68, 0.2); color: var(--neon-red); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .tag-high { background: rgba(245, 158, 11, 0.2); color: var(--neon-amber); border: 1px solid rgba(245, 158, 11, 0.4); }
+    .tag-medium { background: rgba(168, 85, 247, 0.2); color: var(--neon-purple); border: 1px solid rgba(168, 85, 247, 0.4); }
     .hidden { display: none; }
 
-    /* BENCHMARK BOX */
+    /* 3D Benchmark Card */
     .bench-card {
-      background: linear-gradient(135deg, rgba(10, 15, 29, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-      border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 20px; padding: 2rem;
-      margin: 3rem 0; box-shadow: 0 10px 30px rgba(0, 242, 255, 0.05);
+      background: linear-gradient(135deg, rgba(10, 16, 32, 0.8) 0%, rgba(20, 25, 45, 0.9) 100%);
+      border: 1px solid rgba(0, 242, 255, 0.35);
+      border-radius: 24px; padding: 2.5rem;
+      margin: 4rem 0;
+      box-shadow: 0 20px 50px rgba(0, 242, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(24px);
     }
-    .bench-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+    .bench-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
     .bench-stat {
-      background: rgba(0, 242, 255, 0.03); border: 1px solid rgba(0, 242, 255, 0.15);
-      border-radius: 12px; padding: 1.25rem; text-align: center;
+      background: rgba(0, 242, 255, 0.04);
+      border: 1px solid rgba(0, 242, 255, 0.2);
+      border-radius: 16px; padding: 1.5rem; text-align: center;
+      transition: transform 0.3s;
     }
-    .bench-val { font-size: 2.2rem; font-weight: 900; color: var(--neon-cyan); font-family: monospace; }
-    .bench-sub { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-family: monospace; margin-top: 4px; }
+    .bench-stat:hover { transform: scale(1.03); border-color: var(--neon-cyan); }
+    .bench-val { font-size: 2.4rem; font-weight: 900; color: var(--neon-cyan); font-family: monospace; text-shadow: 0 0 20px var(--neon-cyan-glow); }
+    .bench-sub { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-family: monospace; margin-top: 6px; }
 
-    /* MARKETING SECTIONS */
-    .section-title { text-align: center; margin: 4rem 0 2rem 0; }
-    .section-title h2 { font-size: 2.1rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .section-title p { color: var(--text-secondary); font-size: 0.95rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    /* Scroll Scrub Reveal Elements */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-on-scroll.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Section Titles */
+    .section-title { text-align: center; margin: 5rem 0 2.5rem 0; }
+    .section-title h2 { font-size: 2.4rem; font-weight: 900; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .section-title p { color: var(--text-secondary); font-size: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem; margin-bottom: 3.5rem; }
     .feature-card {
-      background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px;
-      padding: 1.75rem; transition: all 0.2s; position: relative; overflow: hidden;
+      background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px;
+      padding: 2rem; backdrop-filter: blur(20px); transition: all 0.3s cubic-bezier(0.1, 1, 0.1, 1);
+      position: relative; overflow: hidden;
     }
-    .feature-card:hover { border-color: rgba(0,242,255,0.4); transform: translateY(-3px); }
-    .feature-icon { font-size: 28px; margin-bottom: 1rem; display: inline-block; }
-    .feature-card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; font-weight: 700; color: #fff; }
-    .feature-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+    .feature-card:hover {
+      border-color: rgba(0, 242, 255, 0.5);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -10px rgba(0, 242, 255, 0.2);
+    }
+    .feature-icon { font-size: 32px; margin-bottom: 1.25rem; display: inline-block; }
+    .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 800; color: #fff; }
+    .feature-card p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; }
 
-    /* COMPREHENSIVE COMPARISON TABLE */
-    .comparison-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 1rem 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .comparison-table th, .comparison-table td { padding: 14px 16px; border: 1px solid var(--glass-border); text-align: left; vertical-align: middle; }
-    .comparison-table th { background: rgba(255,255,255,0.03); font-family: monospace; font-size: 12px; text-transform: uppercase; }
-    .comparison-table tr:nth-child(even) { background: rgba(255,255,255,0.01); }
-    .col-spryzen { background: rgba(0, 242, 255, 0.04) !important; border-left: 2px solid var(--neon-cyan) !important; border-right: 2px solid var(--neon-cyan) !important; }
+    /* Comparison Table Glass Styling */
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 1rem 0; }
+    .comparison-table th, .comparison-table td { padding: 16px 18px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: left; vertical-align: middle; }
+    .comparison-table th { background: rgba(255, 255, 255, 0.05); font-family: monospace; font-size: 12px; text-transform: uppercase; }
+    .comparison-table tr:nth-child(even) { background: rgba(255, 255, 255, 0.015); }
+    .col-spryzen { background: rgba(0, 242, 255, 0.05) !important; border-left: 2px solid var(--neon-cyan) !important; border-right: 2px solid var(--neon-cyan) !important; }
     .check { color: var(--neon-emerald); font-weight: bold; display: flex; align-items: center; gap: 6px; }
     .cross { color: var(--neon-red); font-weight: bold; display: flex; align-items: center; gap: 6px; }
     .partial { color: var(--neon-amber); font-weight: bold; display: flex; align-items: center; gap: 6px; }
-    .subtext { display: block; font-size: 10px; color: var(--text-secondary); font-family: monospace; margin-top: 3px; }
+    .subtext { display: block; font-size: 10px; color: var(--text-secondary); font-family: monospace; margin-top: 4px; }
 
-    /* CTA BANNER */
+    /* CTA Banner */
     .cta-banner {
-      background: linear-gradient(135deg, rgba(0,242,255,0.08) 0%, rgba(168,85,247,0.08) 100%);
-      border: 1px solid rgba(0,242,255,0.25); border-radius: 24px; padding: 3.5rem 2rem;
-      text-align: center; margin: 4rem 0;
+      background: linear-gradient(135deg, rgba(0, 242, 255, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid rgba(0, 242, 255, 0.35); border-radius: 28px; padding: 4rem 2rem;
+      text-align: center; margin: 5rem 0; backdrop-filter: blur(24px);
+      box-shadow: 0 20px 50px rgba(0, 242, 255, 0.12);
     }
-    .cta-banner h2 { font-size: 2.2rem; font-weight: 900; margin-bottom: 1rem; }
-    .cta-banner p { color: var(--text-secondary); max-width: 680px; margin: 0 auto 2rem auto; font-size: 1rem; }
+    .cta-banner h2 { font-size: 2.4rem; font-weight: 900; margin-bottom: 1rem; }
+    .cta-banner p { color: var(--text-secondary); max-width: 680px; margin: 0 auto 2.5rem auto; font-size: 1.05rem; }
 
     /* FAQ */
     .faq-item {
-      background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 12px;
-      padding: 1.25rem; margin-bottom: 1rem;
+      background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px;
+      padding: 1.5rem; margin-bottom: 1.25rem; backdrop-filter: blur(16px);
+      transition: all 0.3s;
     }
-    .faq-item h4 { font-size: 1rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700; }
-    .faq-item p { color: var(--text-secondary); font-size: 0.9rem; }
+    .faq-item:hover { border-color: rgba(0, 242, 255, 0.3); transform: translateX(4px); }
+    .faq-item h4 { font-size: 1.05rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700; }
+    .faq-item p { color: var(--text-secondary); font-size: 0.92rem; }
 
     footer {
-      border-top: 1px solid var(--glass-border); padding: 2rem 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem 1rem;
       text-align: center; font-size: 12px; color: var(--text-secondary); font-family: monospace;
-      margin-top: 4rem;
+      margin-top: 5rem; background: rgba(3, 6, 17, 0.85); backdrop-filter: blur(16px);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- 3D Interactive WebGL / Particle Canvas -->
+  <canvas id="canvas3d"></canvas>
+  <div class="aura-spotlight" id="spotlight"></div>
+  <div class="ambient-orb-1"></div>
+  <div class="ambient-orb-2"></div>
+
+  <!-- Top Glassmorphic Navigation -->
   <header class="nav">
     <div class="nav-inner">
       <a href="https://github.com/Aditya-9-6/spryzen-scan" class="logo">
-        ⚡ <span>Spryzen</span> Scan
+        <div class="logo-icon">⚡</div>
+        <span>Spryzen</span> Scan
       </a>
       <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="#benchmarks" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">⚡ Single-Core Benchmarks</a>
-        <a href="#comparison" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">16-Point Comparison</a>
-        <a href="#download" class="btn btn-secondary" style="padding: 6px 14px; font-size: 11px;">💾 Standalone App</a>
-        <a href="https://github.com/Aditya-9-6/Spryzen-Benchmarks" target="_blank" class="btn btn-github" style="padding: 6px 14px; font-size: 11px;">
+        <a href="#benchmarks" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">⚡ Benchmarks</a>
+        <a href="#comparison" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">16-Point Comparison</a>
+        <a href="#download" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">💾 Standalone App</a>
+        <a href="https://github.com/Aditya-9-6/Spryzen-Benchmarks" target="_blank" class="btn btn-github" style="padding: 7px 16px; font-size: 11px;">
           📊 Verify Benchmarks Here ➔
         </a>
       </div>
@@ -173,23 +355,23 @@
 
   <div class="container">
 
-    <!-- Header -->
-    <div class="header">
+    <!-- 3D Hero Section -->
+    <div class="hero reveal-on-scroll">
       <h1>Offline Server Log <span>Threat Inspector</span></h1>
       <p class="lead">
         Drag & drop raw Nginx, Apache, Cloudflare, or AWS logs. We analyze millions of requests in your local browser memory for <strong>SQLi, XSS, RCE, and AI Prompt Injections</strong> with <span style="color: var(--neon-emerald); font-weight: bold;">0 bytes uploaded</span>.
       </p>
     </div>
 
-    <!-- Upload Box -->
-    <div class="card upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <!-- 3D Upload Zone -->
+    <div class="glass-card upload-zone reveal-on-scroll" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <input type="file" id="fileInput" class="hidden" accept=".log,.txt,.json,.csv" onchange="handleFile(this.files[0])" />
-      <div style="font-size: 48px; margin-bottom: 12px;">🛡️</div>
-      <h3 style="margin-bottom: 6px; font-size: 1.25rem;">Select or Drag Multi-Gigabyte Server Access Logs</h3>
-      <p style="color: var(--text-secondary); font-size: 12px; font-family: monospace; margin-bottom: 24px;">
+      <div class="shield-3d-icon">🛡️</div>
+      <h3 style="margin-bottom: 8px; font-size: 1.35rem; font-weight: 800;">Select or Drag Multi-Gigabyte Server Access Logs</h3>
+      <p style="color: var(--text-secondary); font-size: 13px; font-family: monospace; margin-bottom: 28px;">
         Auto-detects Nginx, Apache, Cloudflare JSON, AWS ALB 29-column, and Envoy logs
       </p>
-      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
           📁 Browse Log File
         </button>
@@ -206,7 +388,7 @@
           <div class="stat-label">Requests Analyzed</div>
           <div class="stat-val" id="statTotal">0</div>
         </div>
-        <div class="stat-card" style="border-color: rgba(239,68,68,0.3)">
+        <div class="stat-card" style="border-color: rgba(239,68,68,0.4)">
           <div class="stat-label" style="color: var(--neon-red)">Threats Detected</div>
           <div class="stat-val" style="color: var(--neon-red)" id="statThreats">0</div>
         </div>
@@ -214,16 +396,16 @@
           <div class="stat-label">Unique Attacker IPs</div>
           <div class="stat-val" style="color: var(--neon-cyan)" id="statIps">0</div>
         </div>
-        <div class="stat-card" style="border-color: rgba(16,185,129,0.3)">
+        <div class="stat-card" style="border-color: rgba(16,185,129,0.4)">
           <div class="stat-label" style="color: var(--neon-emerald)">Spryzen Protection</div>
           <div class="stat-val" style="color: var(--neon-emerald)">100%</div>
         </div>
       </div>
 
-      <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px;">
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h3 style="font-size: 1.1rem; font-weight: 800;">Identified Exploit Payloads & Proven Tokens</h3>
+            <h3 style="font-size: 1.2rem; font-weight: 800;">Identified Exploit Payloads & Proven Tokens</h3>
             <p style="color: var(--text-secondary); font-size: 11px; font-family: monospace;">100% Deterministic Syntax Proof · Zero False Positives</p>
           </div>
           <button class="btn btn-secondary" onclick="window.print()">🖨️ Print PDF Audit Certificate</button>
@@ -245,23 +427,23 @@
       </div>
     </div>
 
-    <!-- ─── BENCHMARK IN A BOX SHOWCASE ─── -->
-    <div class="bench-card" id="benchmarks">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem;">
+    <!-- ─── 3D BENCHMARK IN A BOX SHOWCASE ─── -->
+    <div class="bench-card reveal-on-scroll" id="benchmarks">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 1.25rem;">
         <div>
-          <span style="font-size: 11px; font-family: monospace; font-weight: bold; color: var(--neon-cyan); text-transform: uppercase;">⚡ Verified Performance</span>
-          <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">Single-Core Engine Benchmark</h2>
+          <span style="font-size: 11px; font-family: monospace; font-weight: bold; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 0.05em;">⚡ Hardware-Verified Performance</span>
+          <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-top: 4px;">Single-Core Engine Benchmark</h2>
         </div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button class="btn btn-primary" onclick="runLiveStressTest()" id="btnStress" style="font-size: 11px; padding: 8px 16px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="runLiveStressTest()" id="btnStress" style="font-size: 11px; padding: 10px 18px;">
             ⚡ Run Stress Test on Your Device
           </button>
-          <a href="https://github.com/Aditya-9-6/Spryzen-Benchmarks" target="_blank" class="btn btn-secondary" style="font-size: 11px; padding: 8px 16px;">
+          <a href="https://github.com/Aditya-9-6/Spryzen-Benchmarks" target="_blank" class="btn btn-secondary" style="font-size: 11px; padding: 10px 18px;">
             📊 Verify Benchmarks Here ➔
           </a>
         </div>
       </div>
-      <p style="color: var(--text-secondary); font-size: 0.9rem; max-width: 800px;">
+      <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 820px; line-height: 1.6;">
         Tested on commodity hardware (1 vCPU / 2GB RAM). Rust async I/O with Pingora zero-copy proxying delivers line-rate inspection throughput without GC pauses.
       </p>
 
@@ -284,46 +466,46 @@
         </div>
       </div>
       
-      <div style="text-align: center; margin-top: 1rem;">
-        <span style="font-size: 11px; color: var(--text-secondary); font-family: monospace;" id="stressResultText">
+      <div style="text-align: center; margin-top: 1.25rem;">
+        <span style="font-size: 12px; color: var(--text-secondary); font-family: monospace;" id="stressResultText">
           🔬 Reproducible with <code>wrk -t1 -c100 -d30s http://127.0.0.1:443</code> · Zero Packet Loss
         </span>
       </div>
     </div>
 
-    <!-- ─── MARKETING SECTION 1: THE 3 DEFENSE PILLARS ─── -->
-    <div class="section-title">
+    <!-- ─── 3 DEFENSE PILLARS ─── -->
+    <div class="section-title reveal-on-scroll">
       <h2>Why Top Security Teams Trust Spryzen</h2>
       <p>Engineered for high-frequency APIs, modern AI platforms, and enterprise data privacy.</p>
     </div>
 
     <div class="grid-3">
-      <div class="feature-card">
+      <div class="feature-card reveal-on-scroll">
         <div class="feature-icon">⚡</div>
         <h3>0.4ms SIMD Inspection Engine</h3>
         <p>Vector-accelerated regex and AST grammar normalization unrolls multi-layer encoding and null-byte splices in volatile RAM.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal-on-scroll">
         <div class="feature-icon">🤖</div>
         <h3>Ouroboros AI Guardrails</h3>
         <p>Intercepts prompt injections, jailbreak vectors (DAN mode, role overrides), and system prompt leaks before payloads hit your LLMs.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal-on-scroll">
         <div class="feature-icon">🔒</div>
         <h3>100% Air-Gapped Sovereign Privacy</h3>
         <p>Runs entirely on your local hardware or private VPC. No customer logs, cookies, or telemetry ever leave your security perimeter.</p>
       </div>
     </div>
 
-    <!-- ─── MARKETING SECTION 2: EXHAUSTIVE 16-POINT COMPARISON MATRIX ─── -->
-    <div class="section-title" id="comparison">
+    <!-- ─── EXHAUSTIVE 16-POINT COMPARISON MATRIX ─── -->
+    <div class="section-title reveal-on-scroll" id="comparison">
       <h2>Exhaustive 16-Point Security & Architectural Comparison</h2>
       <p>Comprehensive vector-by-vector breakdown across traditional, cloud, and next-gen firewalls.</p>
     </div>
 
-    <div class="card" style="padding: 1rem; overflow-x: auto;">
+    <div class="glass-card reveal-on-scroll" style="padding: 1.25rem; overflow-x: auto;">
       <table class="comparison-table">
         <thead>
           <tr>
@@ -641,39 +823,39 @@
       </table>
     </div>
 
-    <!-- ─── MARKETING SECTION 3: DOWNLOAD & ACTION BANNER ─── -->
-    <div class="cta-banner" id="download">
+    <!-- ─── 3D CTA BANNER ─── -->
+    <div class="cta-banner reveal-on-scroll" id="download">
       <h2>Take Spryzen With You — 100% Free & Air-Gapped</h2>
       <p>Download the standalone single-file scanner or audit your live production logs on completely disconnected machines.</p>
 
-      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-        <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary">
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="https://github.com/Aditya-9-6/spryzen-scan/archive/refs/heads/main.zip" class="btn btn-primary" style="padding: 14px 30px; font-size: 13px;">
           💾 Download Standalone App (.zip)
         </a>
-        <a href="https://github.com/Aditya-9-6/spryzen-scan" target="_blank" class="btn btn-github">
+        <a href="https://github.com/Aditya-9-6/spryzen-scan" target="_blank" class="btn btn-github" style="padding: 14px 30px; font-size: 13px;">
           ⭐ Star & Fork on GitHub
         </a>
       </div>
     </div>
 
-    <!-- ─── MARKETING SECTION 4: FREQUENTLY ASKED QUESTIONS ─── -->
-    <div class="section-title">
+    <!-- ─── FAQ ─── -->
+    <div class="section-title reveal-on-scroll">
       <h2>Frequently Asked Questions</h2>
       <p>Everything you need to know about Spryzen's zero-trust offline scanner.</p>
     </div>
 
     <div style="max-width: 850px; margin: 0 auto 3rem auto;">
-      <div class="faq-item">
+      <div class="faq-item reveal-on-scroll">
         <h4>🔒 Are my server logs uploaded to your servers or any third-party?</h4>
         <p><strong>Absolutely NOT.</strong> The analysis engine runs 100% locally inside your browser’s volatile RAM using client-side JavaScript. You can turn off your Wi-Fi or put your computer in Airplane Mode, and the scanner will continue to function flawlessly.</p>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item reveal-on-scroll">
         <h4>⚡ Can this handle massive multi-gigabyte production logs (10GB+)?</h4>
         <p>Yes. Spryzen uses a stream-chunked sliding window architecture that processes large files in small 8MB buffers, scanning over 100,000 requests per second without exceeding 50MB of browser memory.</p>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item reveal-on-scroll">
         <h4>🎯 How does Spryzen eliminate false positives?</h4>
         <p>Unlike primitive scanners that flag isolated words like "union" or "select", Spryzen uses strict AST grammar boundary checks to verify genuine execution syntax violations before flagging any request.</p>
       </div>
@@ -686,7 +868,134 @@
     <p>Spryzen Sovereign Security Labs © 2026 · Protected by Spryzen Community & Sovereign Source License · <a href="https://github.com/Aditya-9-6/spryzen-scan" style="color: var(--neon-cyan); text-decoration: none;">GitHub</a></p>
   </footer>
 
+  <!-- 3D Background Engine & Interactive Scripts -->
   <script>
+    // 1. 3D WebGL / Particle Canvas Defense Matrix
+    const canvas = document.getElementById('canvas3d');
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
+    let scrollY = 0;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+      const spotlight = document.getElementById('spotlight');
+      if (spotlight) {
+        spotlight.style.transform = 'translate(' + (e.clientX - 300) + 'px, ' + (e.clientY - 300) + 'px)';
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    });
+
+    // Generate 3D Nodes
+    const NUM_NODES = 85;
+    const nodes = [];
+    for (let i = 0; i < NUM_NODES; i++) {
+      nodes.push({
+        x: (Math.random() - 0.5) * width * 1.5,
+        y: (Math.random() - 0.5) * height * 2,
+        z: Math.random() * 800 + 100,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        vz: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 2 + 1.2
+      });
+    }
+
+    function render3D() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Smooth mouse easing
+      mouse.x += (mouse.targetX - mouse.x) * 0.05;
+      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+      const fov = 400;
+      const cx = width / 2 + (mouse.x - width / 2) * 0.08;
+      const cy = height / 2 + (mouse.y - height / 2) * 0.08 - (scrollY * 0.15) % height;
+
+      // Project and draw nodes
+      const projected = [];
+
+      for (let i = 0; i < nodes.length; i++) {
+        const p = nodes[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        if (p.z <= 10) p.z = 800;
+        if (p.z > 800) p.z = 10;
+        if (p.x < -width) p.x = width;
+        if (p.x > width) p.x = -width;
+        if (p.y < -height) p.y = height;
+        if (p.y > height) p.y = -height;
+
+        const scale = fov / (fov + p.z);
+        const px = p.x * scale + cx;
+        const py = p.y * scale + cy;
+
+        projected.push({ x: px, y: py, scale: scale, z: p.z, radius: p.radius * scale });
+      }
+
+      // Draw Connections (Neural Cyber Matrix)
+      for (let i = 0; i < projected.length; i++) {
+        for (let j = i + 1; j < projected.length; j++) {
+          const dx = projected[i].x - projected[j].x;
+          const dy = projected[i].y - projected[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 120) {
+            const alpha = (1 - dist / 120) * 0.25 * projected[i].scale;
+            ctx.strokeStyle = 'rgba(0, 242, 255, ' + alpha + ')';
+            ctx.lineWidth = 0.8 * projected[i].scale;
+            ctx.beginPath();
+            ctx.moveTo(projected[i].x, projected[i].y);
+            ctx.lineTo(projected[j].x, projected[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw Nodes
+      for (let i = 0; i < projected.length; i++) {
+        const p = projected[i];
+        if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
+
+        ctx.fillStyle = 'rgba(0, 242, 255, ' + (p.scale * 0.8) + ')';
+        ctx.shadowColor = '#00f2ff';
+        ctx.shadowBlur = 10 * p.scale;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(1, p.radius), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      requestAnimationFrame(render3D);
+    }
+    render3D();
+
+    // 2. Scroll Scrub Reveal Observer
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // ── Threat Signatures & Parser Engine ──
     const THREAT_PATTERNS = [
       { type: 'AI Prompt Injection & Jailbreak', severity: 'CRITICAL', regex: /(ignore\s+(all\s+)?(previous|prior|above)\s+instructions|system\s+prompt|dan\s+mode|jailbreak|output\s+all\s+rules|reveal\s+your\s+hidden\s+prompt|role:\s*system|assistant:\s*override|base64_decode\s*\(|human:\s*ignore)/i, mitigation: 'Spryzen Ouroboros AI Guardrail tokenizes prompts and blocks jailbreak vectors in <0.6ms.' },
       { type: 'SQL Injection (SQLi)', severity: 'CRITICAL', regex: /(union\s+select|select\s+.*\s+from|insert\s+into|drop\s+table|information_schema|or\s+['"]?1['"]?\s*=\s*['"]?1|sleep\(\d+\)|benchmark\(\d+,|--|\/\*|'\s*or\s*'\w+'\s*=\s*'\w+|%2527|%2520OR|0x27204f52|UN\/\*\*\/ION|CHAR\(\d+)/i, mitigation: 'Spryzen SIMD WAF vector-filters SQL keywords in <0.4ms.' },
@@ -793,7 +1102,7 @@
           }
         }
         
-        const elapsed = performance.now() - start; // in milliseconds
+        const elapsed = performance.now() - start;
         const rps = Math.round((iterations / (elapsed / 1000)));
         const latencyMs = (elapsed / iterations).toFixed(4);
 
