@@ -1,26 +1,32 @@
-# ⚡ Spryzen Offline Log Threat Inspector (`spryzen-scan`)
+# ⚡ Spryzen Sovereign WAF & Threat Engine (`spryzen-scan`)
 
-> **100% Client-Side · Zero Data Uploads · Air-Gapped Safe · Verified Zero False Positives**
+> **100% Client-Side · Zero Server Rental Costs · On-Premise Binary · Free Edge Adapter**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-00f2ff?style=for-the-badge&logo=github)](https://aditya-9-6.github.io/spryzen-scan/)
 [![Security](https://img.shields.io/badge/Security-Air--Gapped_Safe-10b981?style=for-the-badge&logo=shield)](https://aditya-9-6.github.io/spryzen-scan/)
 [![License](https://img.shields.io/badge/License-Spryzen_BSL_1.0-a855f7?style=for-the-badge)](LICENSE)
 
-An enterprise-grade, browser-based offline security log inspector. Drag & drop multi-gigabyte server logs (`.log`, `.gz`, `.json`, `.csv`) to detect **SQLi, XSS, RCE, Path Traversal, and AI Prompt Injections** directly in your local browser memory with **zero network transmission**.
+Spryzen is an ultra-high performance autonomous Web Application Firewall (WAF) and offline log threat inspector. It protects web applications and AI APIs against **SQLi, XSS, RCE, Path Traversal, and AI Prompt Injections** in `<0.4ms`.
 
 ---
 
-## 🔒 100% Client-Side Air-Gapped Trust Guarantee
+## 🚀 3 Ways to Deploy Spryzen (Zero Cloud Server Costs to You)
 
 ```
 +---------------------------------------------------------------------------------------------------+
-|                           AIR-GAPPED CLIENT-SIDE SECURITY BOUNDARY                                |
+|                            3 ZERO-SERVER-COST DEPLOYMENT OPTIONS                                  |
 +---------------------------------------------------------------------------------------------------+
 |                                                                                                   |
-|  🔒 0 Bytes Uploaded: Your server access logs NEVER leave your computer or browser memory.        |
-|  ✈️ Airplane Mode Ready: Works 100% offline with zero internet connection.                        |
-|  ⚡ High Throughput: Stream-chunked Web Worker scans 100,000+ lines/second without freezing.     |
-|  🎯 Zero False Positives: Strict AST grammar checks differentiate benign search from exploits.    |
+|  1. 🌐 Live Browser Scanner (Free on GitHub Pages):                                               |
+|     Visit https://aditya-9-6.github.io/spryzen-scan/                                              |
+|     Inspects server logs 100% offline in browser memory without sending data over the network.    |
+|                                                                                                   |
+|  2. ⚡ 1-Line On-Premise Binary Installer (Customer's Own Hardware):                              |
+|     curl -fsSL https://raw.githubusercontent.com/Aditya-9-6/spryzen-scan/main/install.sh | bash   |
+|     Runs directly on Ubuntu / Debian / RHEL / macOS in front of your backend with zero setup.    |
+|                                                                                                   |
+|  3. ☁️ Free Edge Serverless Adapter (Cloudflare Workers / Vercel Edge):                           |
+|     Deploy edge/worker.js to your Cloudflare Worker on the 100k req/day free tier ($0.00/mo).     |
 |                                                                                                   |
 +---------------------------------------------------------------------------------------------------+
 ```
@@ -39,29 +45,24 @@ An enterprise-grade, browser-based offline security log inspector. Drag & drop m
 
 ---
 
-## 🚀 Quickstart & Usage
+## 💻 On-Premise Binary Quickstart
 
-### Option 1: Run Live in Browser
-Visit **[https://aditya-9-6.github.io/spryzen-scan/](https://aditya-9-6.github.io/spryzen-scan/)** in Chrome, Edge, Safari, or Firefox.
+Run the one-line installer on your Linux/macOS server:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Aditya-9-6/spryzen-scan/main/install.sh | bash
+```
 
-### Option 2: Run Completely Offline (Single HTML File)
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/Aditya-9-6/spryzen-scan.git
-   ```
-2. Double-click `index.html` to open it in your browser via `file:///` with **0% internet**.
-3. Drag & drop any server log file (Nginx, Apache, Cloudflare, AWS ALB, Envoy).
+To start the WAF daemon protecting your backend application (`http://127.0.0.1:3000`):
+```bash
+sudo systemctl start spryzen
+```
 
----
-
-## 🛡️ Features
-
-- **Multi-Format Auto-Sniffer**: Auto-detects Nginx/Apache Combined, AWS ALB 29-column, Cloudflare JSON, and CSV.
-- **Threat Actor Profiling**: Groups multi-stage attacks by IP and generates a **0–100 Vulnerability Risk Index**.
-- **1-Click Multi-Firewall Exporter**: Copy ready-to-use rules for **Spryzen**, **Nginx**, **Cloudflare WAF**, and **Linux IPTables**.
-- **Certified PDF Audit Export**: One-click printable executive security certificate with permanent Spryzen watermark and **tamper-evident SHA-256 cryptographic signature**.
+To inspect live threat telemetry:
+```bash
+sudo journalctl -u spryzen -f
+```
 
 ---
 
 ## 📜 License
-Distributed under the **Spryzen Community & Sovereign Source License**. Free for personal, developer, and client evaluation. See [`LICENSE`](LICENSE) for details.
+Distributed under the **Spryzen Community & Sovereign Source License**. Free for personal, developer, and client evaluation. Sublicensing or building a competing commercial WAF service is strictly prohibited. See [`LICENSE`](LICENSE) for details.
