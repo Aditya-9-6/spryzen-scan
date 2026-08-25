@@ -565,11 +565,18 @@
         padding: 0 !important;
         margin: 0 !important;
       }
-      #canvas3d, .aurora-container, .aura-spotlight, .nav, .upload-zone, .hero, .bench-card, .section-title, .grid-3, .comparison-table, #comparison, .cta-banner, footer, .btn, .screen-watermark {
+      /* HIDE ALL LANDING PAGE & MARKETING SECTIONS IN PRINT (ONLY AUDIT REPORT PRINTS) */
+      body > *:not(.container):not(.print-watermark-container) {
+        display: none !important;
+      }
+      .container > *:not(#results) {
+        display: none !important;
+      }
+      .nav, .upload-zone, .hero, .bench-card, .section-title, .grid-3, #comparison, .comparison-table, .cta-banner, footer, .faq-item, #canvas3d, .aurora-container, .aura-spotlight, .btn, .screen-watermark, .live-audit-banner, .proof-modal-overlay {
         display: none !important;
       }
       .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-      #results { display: block !important; position: relative !important; }
+      #results { display: block !important; position: relative !important; width: 100% !important; }
 
       /* Watermark fixed across all pages - Large, Upright & Perfectly Centered */
       .print-watermark-container {
@@ -790,7 +797,7 @@
       </div>
 
       <!-- Live Web Audit Header -->
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 16px; padding: 1rem 1.5rem; position: relative; z-index: 1;">
+      <div class="live-audit-banner" style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 16px; padding: 1rem 1.5rem; position: relative; z-index: 1;">
         <img src="assets/logo.jpg" alt="Spryzen Logo" style="width: 44px; height: 44px; border-radius: 10px; object-fit: contain; background: #fff; padding: 2px; box-shadow: 0 0 15px rgba(234, 179, 8, 0.4);" />
         <div>
           <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff;">Spryzen Threat Inspection & Compliance Report</h3>
