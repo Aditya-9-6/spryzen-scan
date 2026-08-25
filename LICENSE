@@ -1,23 +1,40 @@
-SPRYZEN COMMUNITY & SOVEREIGN SOURCE LICENSE
-Version 1.0 (2026)
+SPRYZEN SOVEREIGN PROPRIETARY & TRADE SECRET LICENSE
+Version 2.6 (2026) · All Rights Reserved
 
-Copyright (c) 2026 Spryzen Labs (Spryzen+). All rights reserved.
+Copyright (c) 2026 Spryzen Sovereign Security Labs (Aditya Dahale).
+All intellectual property, proprietary algorithms, AST grammar parsing heuristics, 
+source code, styling, visual assets, and trademarks are the exclusive property 
+of Spryzen Sovereign Security Labs.
 
-1. GRANT OF LICENSE
-Subject to the terms and conditions of this License, Spryzen Labs grants you 
-a non-exclusive, worldwide, royalty-free license to view, download, run, and 
-test the Software for personal and internal evaluation purposes.
+================================================================================
+1. STRICT PROHIBITION AGAINST COPYING, CLONING & REDISTRIBUTION
+================================================================================
+No individual, organization, or entity is permitted to:
+(a) Copy, duplicate, reproduce, mirror, or clone this software, codebase, or website,
+    in whole or in part, in any format or medium.
+(b) Reverse-engineer, decompile, disassemble, or derive the underlying detection 
+    heuristics, regular expressions, AST grammar models, or algorithm architecture.
+(c) Distribute, publish, sublicense, sell, rent, lease, or commercially exploit the
+    Software or any derivative work thereof.
+(d) Use the Software, its logic, or its user interface to train competing AI models,
+    or build competing Web Application Firewalls (WAF), API gateways, or threat scanners.
+(e) Alter, obscure, or remove any copyright notices, watermarks, cryptographic seals,
+    or author attributions.
 
-2. COMMERCIAL RESTRICTIONS
-You may NOT:
-(a) Sublicense, resell, rent, or lease the Software to third parties.
-(b) Use the Software to provide a competing commercial Web Application Firewall (WAF), 
-    AI security gateway, or managed threat inspection service.
-(c) Remove or alter any copyright notices, watermarks, or cryptographic verification headers.
+================================================================================
+2. AUTHORIZED USE
+================================================================================
+You are granted a limited, revocable, non-transferable right to view and interact with
+the live hosted demonstration strictly via https://aditya-9-6.github.io/spryzen-scan/
+for evaluation purposes only. No source code license or rights transfer is granted.
 
-3. DISCLAIMER OF WARRANTY
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR 
-OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+================================================================================
+3. ENFORCEMENT & LEGAL RECOURSE
+================================================================================
+Any unauthorized copying, mirroring, or reverse-engineering of this repository will be
+subject to immediate Digital Millennium Copyright Act (DMCA) takedown notices, 
+intellectual property infringement claims, and legal remedies under applicable international 
+copyright and trade secret laws.
 
-For enterprise commercial licensing inquiries: licensing@spryzen.plus
+For commercial licensing and enterprise deployment inquiries:
+Contact: legal@spryzen.plus / aditya@spryzen.plus

@@ -1942,6 +1942,30 @@
         btn.disabled = false;
       }, 50);
     }
+
+    // ── Anti-Tamper & Anti-Copying Intellectual Property Shield ──
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) ||
+        (e.metaKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    console.log(
+      "%c⛔ SPRYZEN PROPRIETARY INTELLECTUAL PROPERTY\nCopyright © 2026 Spryzen Sovereign Security Labs. All Rights Reserved.\nUnauthorized copying, scraping, or reverse engineering of this software is strictly prohibited under DMCA and international copyright laws.",
+      "color: #00f2ff; font-size: 13px; font-weight: bold; background: #02020a; padding: 10px 14px; border: 1px solid #00f2ff; border-radius: 8px;"
+    );
   </script>
 </body>
 </html>

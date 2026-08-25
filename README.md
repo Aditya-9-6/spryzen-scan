@@ -64,5 +64,11 @@ sudo journalctl -u spryzen -f
 
 ---
 
-## 📜 License
-Distributed under the **Spryzen Community & Sovereign Source License**. Free for personal, developer, and client evaluation. Sublicensing or building a competing commercial WAF service is strictly prohibited. See [`LICENSE`](LICENSE) for details.
+## 🔒 Intellectual Property & Anti-Cloning Notice
+**Copyright © 2026 Spryzen Sovereign Security Labs. All Rights Reserved.**
+
+This software, detection algorithms, AST grammar parsing models, and user interface are proprietary trade secrets of Spryzen Sovereign Security Labs. 
+
+- **Unauthorized Copying / Mirroring**: Cloning, copying, scraping, or redistributing this codebase is strictly prohibited.
+- **Reverse Engineering**: Decompiling or extracting the AST detection rules for competing commercial services is actionable under DMCA and international copyright law.
+- See [`LICENSE`](LICENSE) for complete legal terms. For enterprise commercial licensing inquiries, contact `legal@spryzen.plus`.
