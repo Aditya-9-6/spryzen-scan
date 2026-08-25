@@ -385,8 +385,30 @@
   <header class="nav">
     <div class="nav-inner">
       <a href="https://github.com/Aditya-9-6/spryzen-scan" class="logo">
-        <div class="logo-icon">⚡</div>
-        <span>Spryzen</span> Scan
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 16px rgba(0, 242, 255, 0.65));">
+          <defs>
+            <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f2ff"/>
+              <stop offset="50%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+            <linearGradient id="innerGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(0,242,255,0.35)"/>
+              <stop offset="100%" stop-color="rgba(168,85,247,0.1)"/>
+            </linearGradient>
+          </defs>
+          <polygon points="50,6 90,25 90,75 50,94 10,75 10,25" fill="#080d24" stroke="url(#shieldGrad)" stroke-width="4.5" stroke-linejoin="round"/>
+          <polygon points="50,16 80,30 80,70 50,84 20,70 20,30" fill="url(#innerGlow)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="43" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">S</text>
+          <text x="68" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="28" fill="#00f2ff" text-anchor="middle">+</text>
+        </svg>
+        <div style="display: flex; flex-direction: column; line-height: 1.1; margin-left: 2px;">
+          <span style="font-size: 1.25rem; font-weight: 900; letter-spacing: -0.02em; color: #fff;">
+            SPRYZEN<b style="color: var(--neon-cyan); -webkit-text-fill-color: var(--neon-cyan);">+</b>
+          </span>
+          <span style="font-size: 9px; font-family: monospace; color: var(--neon-cyan); letter-spacing: 0.1em; text-transform: uppercase;">Threat Engine</span>
+        </div>
+        <span style="font-family: monospace; font-size: 10px; font-weight: 700; color: #34d399; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.35); padding: 2px 8px; border-radius: 99px; margin-left: 6px;">v2.6</span>
       </a>
       <div style="display: flex; gap: 10px; align-items: center;">
         <a href="#benchmarks" class="btn btn-secondary" style="padding: 7px 16px; font-size: 11px;">⚡ Benchmarks</a>
@@ -412,7 +434,14 @@
     <!-- 3D Upload Zone -->
     <div class="glass-card upload-zone reveal-on-scroll" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <input type="file" id="fileInput" class="hidden" accept=".log,.txt,.json,.csv" onchange="handleFile(this.files[0])" />
-      <div class="shield-3d-icon">🛡️</div>
+      <div class="shield-3d-icon">
+        <svg width="72" height="72" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.8));">
+          <polygon points="50,6 90,25 90,75 50,94 10,75 10,25" fill="#0c122e" stroke="url(#shieldGrad)" stroke-width="4.5" stroke-linejoin="round"/>
+          <polygon points="50,16 80,30 80,70 50,84 20,70 20,30" fill="url(#innerGlow)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <text x="43" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">S</text>
+          <text x="68" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="28" fill="#00f2ff" text-anchor="middle">+</text>
+        </svg>
+      </div>
       <h3 style="margin-bottom: 8px; font-size: 1.35rem; font-weight: 800;">Select or Drag Multi-Gigabyte Server Access Logs</h3>
       <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin-bottom: 28px;">
         Auto-detects Nginx, Apache, Cloudflare JSON, AWS ALB 29-column, and Envoy logs
