@@ -423,16 +423,17 @@
         left: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        z-index: 0 !important;
+        z-index: 99999 !important;
         pointer-events: none !important;
       }
       .print-watermark-img {
         display: block !important;
-        width: 480px !important;
-        height: 480px !important;
+        width: 520px !important;
+        height: 520px !important;
         object-fit: contain !important;
-        opacity: 0.12 !important;
-        transform: rotate(-12deg) !important;
+        opacity: 0.18 !important;
+        transform: rotate(-15deg) !important;
+        mix-blend-mode: multiply !important;
       }
 
       .print-header-block {
