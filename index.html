@@ -757,9 +757,12 @@
         <img src="assets/logo.jpg" alt="Spryzen Shield Logo" class="shield-logo-hero" />
       </div>
       <h3 style="margin-bottom: 8px; font-size: 1.35rem; font-weight: 800;">Select or Drag Multi-Gigabyte Server Access Logs</h3>
-      <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin-bottom: 28px;">
+      <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin-bottom: 18px;">
         Auto-detects Nginx, Apache, Cloudflare JSON, AWS ALB 29-column, and Envoy logs
       </p>
+      <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 11px; padding: 4px 14px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s;">
+        🛡️ Free Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans Remaining
+      </div>
       <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
           📁 Browse Log File
@@ -767,6 +770,33 @@
         <button class="btn btn-secondary" onclick="event.stopPropagation(); loadSample()">
           ✨ Load Attack Sample
         </button>
+      </div>
+    </div>
+
+    <!-- Daily Quota Limit Modal -->
+    <div id="quotaModal" class="proof-modal-overlay" onclick="closeQuotaModal(event)">
+      <div class="proof-modal" onclick="event.stopPropagation()" style="max-width: 580px; text-align: center;">
+        <div style="font-size: 44px; margin-bottom: 12px;">🔒</div>
+        <h3 style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 8px;">
+          Daily Free Scan Limit Reached
+        </h3>
+        <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
+          You have used all <strong style="color: #fb7185;">5 free community log evaluations</strong> for today. Your quota will reset automatically in 24 hours.
+        </p>
+        <div style="background: rgba(0, 242, 255, 0.06); border: 1px solid rgba(0, 242, 255, 0.25); border-radius: 14px; padding: 1.25rem; text-align: left; margin-bottom: 24px;">
+          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">🚀 Need Unlimited Enterprise Auditing?</div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.5;">
+            Deploy the standalone Spryzen on-premise binary to audit unlimited multi-terabyte log archives directly inside your private VPC with zero cloud upload limits.
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="#download" class="btn btn-primary" onclick="closeQuotaModal()" style="font-size: 11px; padding: 10px 20px;">
+            ⚡ Deploy On-Premise Binary
+          </a>
+          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;">
+            📧 Contact Enterprise Licensing
+          </a>
+        </div>
       </div>
     </div>
 
@@ -1890,14 +1920,74 @@
       });
     }
 
+    // ── Daily Free Scan Quota Engine (Rate Limiter) ──
+    const MAX_DAILY_SCANS = 5;
+
+    function getQuotaData() {
+      const today = new Date().toISOString().split('T')[0];
+      try {
+        const stored = JSON.parse(localStorage.getItem('spryzen_daily_quota') || '{}');
+        if (stored.date === today) {
+          return stored;
+        }
+      } catch (e) {}
+      return { date: today, used: 0 };
+    }
+
+    function updateQuotaUI() {
+      const q = getQuotaData();
+      const remaining = Math.max(0, MAX_DAILY_SCANS - q.used);
+      const countEl = document.getElementById('quotaCount');
+      const badge = document.getElementById('quotaBadge');
+      if (countEl) countEl.innerText = remaining + ' / ' + MAX_DAILY_SCANS;
+      if (badge) {
+        if (remaining === 0) {
+          badge.style.borderColor = 'rgba(244, 63, 94, 0.5)';
+          badge.style.color = '#fb7185';
+          badge.style.background = 'rgba(244, 63, 94, 0.1)';
+        } else {
+          badge.style.borderColor = 'rgba(0, 242, 255, 0.3)';
+          badge.style.color = 'var(--neon-cyan)';
+          badge.style.background = 'rgba(0, 242, 255, 0.08)';
+        }
+      }
+    }
+
+    function checkAndConsumeQuota() {
+      const q = getQuotaData();
+      if (q.used >= MAX_DAILY_SCANS) {
+        showQuotaModal();
+        return false;
+      }
+      q.used += 1;
+      localStorage.setItem('spryzen_daily_quota', JSON.stringify(q));
+      updateQuotaUI();
+      return true;
+    }
+
+    function showQuotaModal() {
+      const modal = document.getElementById('quotaModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeQuotaModal(event) {
+      if (event && event.target && event.target.id !== 'quotaModal') return;
+      const modal = document.getElementById('quotaModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    updateQuotaUI();
+
     function handleFile(file) {
       if (!file) return;
+      if (!checkAndConsumeQuota()) return;
       const reader = new FileReader();
       reader.onload = function(e) { processText(e.target.result); };
       reader.readAsText(file);
     }
 
     function loadSample() {
+      if (!checkAndConsumeQuota()) return;
       processText(SAMPLE);
     }
 
