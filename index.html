@@ -760,8 +760,10 @@
       <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin-bottom: 18px;">
         Auto-detects Nginx, Apache, Cloudflare JSON, AWS ALB 29-column, and Envoy logs
       </p>
-      <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 11px; padding: 4px 14px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s;">
-        🛡️ Free Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans Remaining
+      <div id="quotaBadge" style="display: inline-flex; align-items: center; gap: 8px; font-family: monospace; font-size: 11px; padding: 5px 16px; border-radius: 99px; background: rgba(0, 242, 255, 0.08); border: 1px solid rgba(0, 242, 255, 0.3); color: var(--neon-cyan); margin-bottom: 24px; transition: all 0.3s; flex-wrap: wrap; justify-content: center;">
+        <span>🛡️ Free Tier: <strong id="quotaCount">5 / 5</strong> Daily Scans</span>
+        <span style="opacity: 0.4;">|</span>
+        <span style="color: #cbd5e1;">Max <strong>50 MB</strong> / File</span>
       </div>
       <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
@@ -795,6 +797,33 @@
           </a>
           <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;">
             📧 Contact Enterprise Licensing
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Size Exceeded Modal -->
+    <div id="fileSizeModal" class="proof-modal-overlay" onclick="closeFileSizeModal(event)">
+      <div class="proof-modal" onclick="event.stopPropagation()" style="max-width: 580px; text-align: center;">
+        <div style="font-size: 44px; margin-bottom: 12px;">📦</div>
+        <h3 style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 8px;">
+          File Size Limit Exceeded
+        </h3>
+        <p style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
+          Your selected file is <strong style="color: #fb7185;" id="fileSizeDisplay">-- MB</strong>. The free client-side browser scanner supports log files up to <strong style="color: var(--neon-cyan);">50 MB (~500,000 requests)</strong> to maintain sub-millisecond memory performance.
+        </p>
+        <div style="background: rgba(0, 242, 255, 0.06); border: 1px solid rgba(0, 242, 255, 0.25); border-radius: 14px; padding: 1.25rem; text-align: left; margin-bottom: 24px;">
+          <div style="font-weight: bold; color: var(--neon-cyan); font-size: 12px; margin-bottom: 4px;">⚡ Audit Multi-Gigabyte Files Offline</div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.5;">
+            For massive 10GB–100GB production archives, run the Spryzen native CLI or on-premise binary to stream gigabytes per second directly from disk.
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="#download" class="btn btn-primary" onclick="closeFileSizeModal()" style="font-size: 11px; padding: 10px 20px;">
+            💾 Get Standalone Native App
+          </a>
+          <a href="mailto:licensing@spryzen.plus" class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;">
+            📧 Enterprise Inquiries
           </a>
         </div>
       </div>
@@ -1978,8 +2007,28 @@
 
     updateQuotaUI();
 
+    const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB Free Browser Quota
+
+    function showFileSizeModal(sizeBytes) {
+      const sizeMB = (sizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+      const displayEl = document.getElementById('fileSizeDisplay');
+      if (displayEl) displayEl.innerText = sizeMB;
+      const modal = document.getElementById('fileSizeModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeFileSizeModal(event) {
+      if (event && event.target && event.target.id !== 'fileSizeModal') return;
+      const modal = document.getElementById('fileSizeModal');
+      if (modal) modal.classList.remove('active');
+    }
+
     function handleFile(file) {
       if (!file) return;
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        showFileSizeModal(file.size);
+        return;
+      }
       if (!checkAndConsumeQuota()) return;
       const reader = new FileReader();
       reader.onload = function(e) { processText(e.target.result); };
