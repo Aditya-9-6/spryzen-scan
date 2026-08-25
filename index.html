@@ -7,9 +7,9 @@
   <meta name="description" content="100% Client-Side 3D Air-Gapped Log Inspector. Detect SQLi, XSS, RCE, and AI Prompt Injections locally in your browser with zero data uploads." />
   <style>
     :root {
-      --bg-void: #03030c;
-      --bg-card: rgba(12, 14, 28, 0.65);
-      --bg-card-hover: rgba(18, 22, 45, 0.85);
+      --bg-void: #02020a;
+      --bg-card: rgba(10, 14, 30, 0.7);
+      --bg-card-hover: rgba(18, 24, 50, 0.85);
       --neon-cyan: #00f2ff;
       --neon-cyan-glow: rgba(0, 242, 255, 0.45);
       --neon-purple: #c084fc;
@@ -32,26 +32,24 @@
       overflow-x: hidden;
       position: relative;
       background-image: 
-        radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
-        radial-gradient(at 85% 20%, rgba(217, 70, 239, 0.15) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(0, 242, 255, 0.1) 0px, transparent 60%),
-        radial-gradient(at 20% 80%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
-        radial-gradient(at 80% 85%, rgba(192, 132, 252, 0.16) 0px, transparent 50%);
+        radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.22) 0px, transparent 50%),
+        radial-gradient(at 85% 20%, rgba(217, 70, 239, 0.18) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(0, 242, 255, 0.14) 0px, transparent 60%),
+        radial-gradient(at 20% 80%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+        radial-gradient(at 80% 85%, rgba(192, 132, 252, 0.2) 0px, transparent 50%);
       background-attachment: fixed;
     }
 
-    /* 3D Particle Canvas */
+    /* 3D Background Canvas */
     #canvas3d {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       z-index: -1;
       pointer-events: none;
     }
 
-    /* Multi-Color Aurora Ambient Orbs */
+    /* Multi-Color Dynamic Aurora Atmosphere */
     .aurora-container {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -61,64 +59,64 @@
     }
     .aurora-blob-1 {
       position: absolute;
-      top: -10%; left: 10%;
-      width: 650px; height: 650px;
+      top: -15%; left: 10%;
+      width: 700px; height: 700px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(232, 121, 249, 0.15) 50%, transparent 75%);
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, rgba(232, 121, 249, 0.18) 50%, transparent 75%);
       filter: blur(90px);
-      animation: drift1 18s ease-in-out infinite alternate;
+      animation: drift1 16s ease-in-out infinite alternate;
     }
     .aurora-blob-2 {
       position: absolute;
-      top: 40%; right: -5%;
-      width: 700px; height: 700px;
+      top: 35%; right: -10%;
+      width: 750px; height: 750px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 242, 255, 0.22) 0%, rgba(56, 189, 248, 0.12) 50%, transparent 75%);
+      background: radial-gradient(circle, rgba(0, 242, 255, 0.25) 0%, rgba(56, 189, 248, 0.15) 50%, transparent 75%);
       filter: blur(100px);
-      animation: drift2 22s ease-in-out infinite alternate-reverse;
+      animation: drift2 20s ease-in-out infinite alternate-reverse;
     }
     .aurora-blob-3 {
       position: absolute;
-      bottom: -10%; left: 20%;
-      width: 600px; height: 600px;
+      bottom: -15%; left: 15%;
+      width: 650px; height: 650px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 50%, transparent 75%);
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(99, 102, 241, 0.18) 50%, transparent 75%);
       filter: blur(95px);
-      animation: drift3 20s ease-in-out infinite alternate;
+      animation: drift3 18s ease-in-out infinite alternate;
     }
     .aurora-blob-4 {
       position: absolute;
-      top: 25%; left: 45%;
-      width: 500px; height: 500px;
+      top: 20%; left: 40%;
+      width: 550px; height: 550px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(244, 63, 94, 0.14) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 75%);
+      background: radial-gradient(circle, rgba(244, 63, 94, 0.16) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 75%);
       filter: blur(85px);
-      animation: drift1 25s ease-in-out infinite alternate-reverse;
+      animation: drift1 22s ease-in-out infinite alternate-reverse;
     }
 
     @keyframes drift1 {
       0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-      50% { transform: translate(60px, 80px) scale(1.15) rotate(180deg); }
-      100% { transform: translate(-40px, 40px) scale(0.95) rotate(360deg); }
+      50% { transform: translate(80px, 100px) scale(1.2) rotate(180deg); }
+      100% { transform: translate(-60px, 50px) scale(0.9) rotate(360deg); }
     }
     @keyframes drift2 {
       0% { transform: translate(0px, 0px) scale(1.1); }
-      50% { transform: translate(-80px, -60px) scale(0.9); }
-      100% { transform: translate(50px, 50px) scale(1.2); }
+      50% { transform: translate(-100px, -80px) scale(0.85); }
+      100% { transform: translate(70px, 70px) scale(1.25); }
     }
     @keyframes drift3 {
-      0% { transform: translate(0px, 0px) scale(0.9); }
-      50% { transform: translate(70px, -50px) scale(1.15); }
-      100% { transform: translate(-50px, 70px) scale(1); }
+      0% { transform: translate(0px, 0px) scale(0.85); }
+      50% { transform: translate(90px, -60px) scale(1.2); }
+      100% { transform: translate(-70px, 90px) scale(1); }
     }
 
-    /* Mouse Spotlight Tracker */
+    /* Interactive Spotlight Tracker */
     .aura-spotlight {
       position: fixed;
-      width: 550px; height: 550px;
+      width: 600px; height: 600px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 242, 255, 0.14) 0%, rgba(217, 70, 239, 0.08) 50%, transparent 70%);
-      filter: blur(70px);
+      background: radial-gradient(circle, rgba(0, 242, 255, 0.18) 0%, rgba(217, 70, 239, 0.1) 50%, transparent 70%);
+      filter: blur(75px);
       pointer-events: none;
       z-index: -1;
       transition: transform 0.15s cubic-bezier(0.1, 1, 0.1, 1);
@@ -161,60 +159,62 @@
       text-align: center; margin-bottom: 3.5rem;
     }
     h1 {
-      font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem;
+      font-size: 3.6rem; font-weight: 900; margin-bottom: 1rem;
       letter-spacing: -0.03em; line-height: 1.15;
     }
     h1 span {
       background: linear-gradient(135deg, #00f2ff 0%, #38bdf8 25%, #c084fc 60%, #f43f5e 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 35px rgba(0, 242, 255, 0.35));
+      filter: drop-shadow(0 0 35px rgba(0, 242, 255, 0.4));
     }
     p.lead {
       color: #cbd5e1; font-size: 1.15rem; max-width: 780px; margin: 0 auto;
       line-height: 1.7;
     }
 
-    /* Luxury Holographic Glass Cards */
+    /* Luxury Holographic Glass Cards with Animated Shimmer */
     .glass-card {
-      background: linear-gradient(135deg, rgba(15, 18, 38, 0.7) 0%, rgba(20, 16, 42, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(14, 18, 38, 0.75) 0%, rgba(22, 16, 45, 0.65) 100%);
       border: 1px solid rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
-      border-radius: 24px;
+      border-radius: 26px;
       padding: 2.25rem;
       margin-bottom: 3rem;
-      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.2);
       transition: all 0.4s cubic-bezier(0.1, 1, 0.1, 1);
+      position: relative;
     }
     .glass-card:hover {
       border-color: rgba(0, 242, 255, 0.45);
-      box-shadow: 0 35px 70px -15px rgba(0, 242, 255, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+      box-shadow: 0 35px 70px -15px rgba(0, 242, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
     }
 
     /* 3D Upload Zone */
     .upload-zone {
-      border: 2px dashed rgba(0, 242, 255, 0.4); border-radius: 24px;
+      border: 2px dashed rgba(0, 242, 255, 0.45); border-radius: 26px;
       padding: 4rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.1, 1, 0.1, 1);
-      background: radial-gradient(circle at center, rgba(168, 85, 247, 0.08) 0%, rgba(0, 242, 255, 0.04) 50%, transparent 80%);
+      background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, rgba(0, 242, 255, 0.05) 50%, transparent 80%);
       position: relative; overflow: hidden;
     }
     .upload-zone:hover {
       border-color: var(--neon-cyan);
-      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.12) 0%, rgba(232, 121, 249, 0.08) 50%, transparent 85%);
+      background: radial-gradient(circle at center, rgba(0, 242, 255, 0.16) 0%, rgba(232, 121, 249, 0.1) 50%, transparent 85%);
       transform: translateY(-4px) scale(1.005);
-      box-shadow: 0 25px 50px -10px rgba(0, 242, 255, 0.25);
+      box-shadow: 0 25px 50px -10px rgba(0, 242, 255, 0.3);
     }
     .shield-3d-icon {
-      font-size: 58px; margin-bottom: 16px; display: inline-block;
+      font-size: 60px; margin-bottom: 16px; display: inline-block;
       animation: pulseShield 3s ease-in-out infinite;
       filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.6));
     }
     @keyframes pulseShield {
       0%, 100% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.08) rotate(3deg); }
+      50% { transform: scale(1.1) rotate(4deg); }
     }
 
-    /* Buttons with Gloss & Multi-Shade Gradients */
+    /* Buttons with Gloss & Glow */
     .btn {
       padding: 12px 26px; border-radius: 14px; font-family: monospace; font-size: 12px;
       font-weight: 800; cursor: pointer; border: none; transition: all 0.25s cubic-bezier(0.1, 1, 0.1, 1);
@@ -230,13 +230,13 @@
       box-shadow: 0 8px 30px rgba(0, 242, 255, 0.65);
     }
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(12px);
     }
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.15);
       border-color: var(--neon-cyan);
       transform: translateY(-2px);
     }
@@ -256,7 +256,7 @@
     /* Stats Grid */
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card {
-      background: linear-gradient(135deg, rgba(20, 24, 48, 0.6) 0%, rgba(30, 20, 50, 0.5) 100%);
+      background: linear-gradient(135deg, rgba(20, 24, 48, 0.65) 0%, rgba(30, 20, 50, 0.55) 100%);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px; padding: 1.5rem;
       backdrop-filter: blur(20px);
@@ -278,7 +278,7 @@
     .tag-medium { background: rgba(168, 85, 247, 0.25); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.45); }
     .hidden { display: none; }
 
-    /* 3D Benchmark Card with Multi-Shade Glow */
+    /* 3D Benchmark Card */
     .bench-card {
       background: linear-gradient(135deg, rgba(16, 20, 45, 0.8) 0%, rgba(30, 16, 52, 0.85) 50%, rgba(12, 28, 48, 0.8) 100%);
       border: 1px solid rgba(0, 242, 255, 0.4);
@@ -316,7 +316,7 @@
     .section-title p { color: #94a3b8; font-size: 1rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem; margin-bottom: 3.5rem; }
     .feature-card {
-      background: linear-gradient(135deg, rgba(16, 20, 42, 0.7) 0%, rgba(28, 16, 45, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(16, 20, 42, 0.75) 0%, rgba(28, 16, 45, 0.65) 100%);
       border: 1px solid var(--glass-border); border-radius: 22px;
       padding: 2rem; backdrop-filter: blur(24px); transition: all 0.3s cubic-bezier(0.1, 1, 0.1, 1);
       position: relative; overflow: hidden;
@@ -341,7 +341,7 @@
     .partial { color: #fbbf24; font-weight: bold; display: flex; align-items: center; gap: 6px; }
     .subtext { display: block; font-size: 10px; color: #94a3b8; font-family: monospace; margin-top: 4px; }
 
-    /* CTA Banner with Vivid Aurora Gradient */
+    /* CTA Banner */
     .cta-banner {
       background: linear-gradient(135deg, rgba(0, 242, 255, 0.15) 0%, rgba(168, 85, 247, 0.18) 50%, rgba(244, 63, 94, 0.12) 100%);
       border: 1px solid rgba(0, 242, 255, 0.4); border-radius: 32px; padding: 4rem 2rem;
@@ -353,7 +353,7 @@
 
     /* FAQ */
     .faq-item {
-      background: linear-gradient(135deg, rgba(16, 20, 42, 0.7) 0%, rgba(24, 18, 48, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(16, 20, 42, 0.75) 0%, rgba(24, 18, 48, 0.65) 100%);
       border: 1px solid var(--glass-border); border-radius: 18px;
       padding: 1.6rem; margin-bottom: 1.25rem; backdrop-filter: blur(20px);
       transition: all 0.3s;
@@ -371,7 +371,7 @@
 </head>
 <body>
 
-  <!-- Multi-Shaded Aurora Atmosphere & 3D Particles -->
+  <!-- Multi-Shaded Aurora Atmosphere & 3D Interactive Canvas -->
   <div class="aurora-container">
     <div class="aurora-blob-1"></div>
     <div class="aurora-blob-2"></div>
@@ -914,9 +914,8 @@
     <p>Spryzen Sovereign Security Labs © 2026 · Protected by Spryzen Community & Sovereign Source License · <a href="https://github.com/Aditya-9-6/spryzen-scan" style="color: var(--neon-cyan); text-decoration: none;">GitHub</a></p>
   </footer>
 
-  <!-- 3D Multi-Color Background Engine & Interactive Scripts -->
+  <!-- 3D Multi-Color Background Engine with Rotating Polyhedron, Energy Wave & Data Pulse Physics -->
   <script>
-    // 1. 3D Particle Canvas with Multi-Color Shading
     const canvas = document.getElementById('canvas3d');
     const ctx = canvas.getContext('2d');
     let width = (canvas.width = window.innerWidth);
@@ -924,6 +923,7 @@
 
     let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
     let scrollY = 0;
+    let time = 0;
 
     window.addEventListener('resize', () => {
       width = canvas.width = window.innerWidth;
@@ -935,7 +935,7 @@
       mouse.targetY = e.clientY;
       const spotlight = document.getElementById('spotlight');
       if (spotlight) {
-        spotlight.style.transform = 'translate(' + (e.clientX - 275) + 'px, ' + (e.clientY - 275) + 'px)';
+        spotlight.style.transform = 'translate(' + (e.clientX - 300) + 'px, ' + (e.clientY - 300) + 'px)';
       }
     });
 
@@ -943,42 +943,87 @@
       scrollY = window.pageYOffset || document.documentElement.scrollTop;
     });
 
-    // Multi-Color Palette for 3D Nodes
+    // Multi-Color Palette
     const COLOR_PALETTE = ['#00f2ff', '#c084fc', '#e879f9', '#38bdf8', '#34d399', '#f43f5e'];
 
-    // Generate 3D Nodes
-    const NUM_NODES = 95;
+    // 1. Generate 3D Nodes
+    const NUM_NODES = 110;
     const nodes = [];
     for (let i = 0; i < NUM_NODES; i++) {
       nodes.push({
-        x: (Math.random() - 0.5) * width * 1.5,
-        y: (Math.random() - 0.5) * height * 2,
-        z: Math.random() * 800 + 100,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        vz: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 2.2 + 1.2,
-        color: COLOR_PALETTE[i % COLOR_PALETTE.length]
+        x: (Math.random() - 0.5) * width * 1.8,
+        y: (Math.random() - 0.5) * height * 2.2,
+        z: Math.random() * 800 + 80,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        vz: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 2.5 + 1.2,
+        color: COLOR_PALETTE[i % COLOR_PALETTE.length],
+        pulse: Math.random() * Math.PI * 2
+      });
+    }
+
+    // 2. Data Packet Pulses Traversing Nodes
+    const packets = [];
+    for (let i = 0; i < 15; i++) {
+      packets.push({
+        sourceIdx: Math.floor(Math.random() * NUM_NODES),
+        targetIdx: Math.floor(Math.random() * NUM_NODES),
+        progress: Math.random(),
+        speed: 0.008 + Math.random() * 0.012,
+        color: COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]
+      });
+    }
+
+    // 3. 3D Rotating Geodesic Polyhedron Vertices
+    const polyVertices = [];
+    const numPoly = 12;
+    for (let i = 0; i < numPoly; i++) {
+      const phi = Math.acos(-1 + (2 * i) / numPoly);
+      const theta = Math.sqrt(numPoly * Math.PI) * phi;
+      polyVertices.push({
+        x: 180 * Math.cos(theta) * Math.sin(phi),
+        y: 180 * Math.sin(theta) * Math.sin(phi),
+        z: 180 * Math.cos(phi)
       });
     }
 
     function render3D() {
       ctx.clearRect(0, 0, width, height);
+      time += 0.015;
 
-      mouse.x += (mouse.targetX - mouse.x) * 0.05;
-      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+      mouse.x += (mouse.targetX - mouse.x) * 0.06;
+      mouse.y += (mouse.targetY - mouse.y) * 0.06;
 
-      const fov = 420;
-      const cx = width / 2 + (mouse.x - width / 2) * 0.08;
-      const cy = height / 2 + (mouse.y - height / 2) * 0.08 - (scrollY * 0.12) % height;
+      const fov = 450;
+      const cx = width / 2 + (mouse.x - width / 2) * 0.09;
+      const cy = height / 2 + (mouse.y - height / 2) * 0.09 - (scrollY * 0.12) % height;
 
+      // ── A. DRAW SINE ENERGY WAVE RIPPLE IN BACKGROUND ──
+      ctx.lineWidth = 1.2;
+      for (let w = 0; w < 3; w++) {
+        ctx.beginPath();
+        const waveColor = w === 0 ? 'rgba(0, 242, 255, 0.08)' : (w === 1 ? 'rgba(192, 132, 252, 0.06)' : 'rgba(232, 121, 249, 0.05)');
+        ctx.strokeStyle = waveColor;
+        const waveOffset = w * 40 + time * 30;
+        const waveYBase = height * 0.6 + Math.sin(time + w) * 30;
+
+        for (let x = 0; x < width; x += 15) {
+          const y = waveYBase + Math.sin((x + waveOffset) * 0.005) * 45 + Math.cos((x - waveOffset) * 0.003) * 30;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // ── B. PROJECT 3D NODES ──
       const projected = [];
-
       for (let i = 0; i < nodes.length; i++) {
         const p = nodes[i];
         p.x += p.vx;
         p.y += p.vy;
         p.z += p.vz;
+        p.pulse += 0.04;
 
         if (p.z <= 10) p.z = 800;
         if (p.z > 800) p.z = 10;
@@ -990,26 +1035,27 @@
         const scale = fov / (fov + p.z);
         const px = p.x * scale + cx;
         const py = p.y * scale + cy;
+        const currentRadius = p.radius * scale * (1 + Math.sin(p.pulse) * 0.25);
 
-        projected.push({ x: px, y: py, scale: scale, z: p.z, radius: p.radius * scale, color: p.color });
+        projected.push({ x: px, y: py, scale: scale, z: p.z, radius: currentRadius, color: p.color });
       }
 
-      // Draw Connections (Multi-Shade Cyber Beams)
+      // Draw Connections (Cyber Beams)
       for (let i = 0; i < projected.length; i++) {
         for (let j = i + 1; j < projected.length; j++) {
           const dx = projected[i].x - projected[j].x;
           const dy = projected[i].y - projected[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
-            const alpha = (1 - dist / 130) * 0.28 * projected[i].scale;
+          if (dist < 135) {
+            const alpha = (1 - dist / 135) * 0.32 * projected[i].scale;
             const grad = ctx.createLinearGradient(projected[i].x, projected[i].y, projected[j].x, projected[j].y);
             grad.addColorStop(0, projected[i].color);
             grad.addColorStop(1, projected[j].color);
             
             ctx.strokeStyle = grad;
             ctx.globalAlpha = alpha;
-            ctx.lineWidth = 0.9 * projected[i].scale;
+            ctx.lineWidth = 1.0 * projected[i].scale;
             ctx.beginPath();
             ctx.moveTo(projected[i].x, projected[i].y);
             ctx.lineTo(projected[j].x, projected[j].y);
@@ -1019,18 +1065,86 @@
         }
       }
 
-      // Draw Nodes
+      // ── C. DRAW DATA PACKETS MOVING ALONG BEAMS ──
+      for (let k = 0; k < packets.length; k++) {
+        const pkt = packets[k];
+        pkt.progress += pkt.speed;
+        if (pkt.progress >= 1) {
+          pkt.progress = 0;
+          pkt.sourceIdx = Math.floor(Math.random() * NUM_NODES);
+          pkt.targetIdx = Math.floor(Math.random() * NUM_NODES);
+        }
+
+        const p1 = projected[pkt.sourceIdx];
+        const p2 = projected[pkt.targetIdx];
+        if (p1 && p2) {
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            const curX = p1.x + dx * pkt.progress;
+            const curY = p1.y + dy * pkt.progress;
+            ctx.fillStyle = pkt.color;
+            ctx.shadowColor = pkt.color;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(curX, curY, 3 * p1.scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      // ── D. DRAW 3D NODES ──
       for (let i = 0; i < projected.length; i++) {
         const p = projected[i];
         if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
 
         ctx.fillStyle = p.color;
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = 12 * p.scale;
+        ctx.shadowBlur = 14 * p.scale;
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(1.2, p.radius), 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
+      }
+
+      // ── E. DRAW FLOATING 3D ROTATING CYBER POLYHEDRON ──
+      const rotX = time * 0.4 + (mouse.y - height / 2) * 0.001;
+      const rotY = time * 0.6 + (mouse.x - width / 2) * 0.001 + (scrollY * 0.002);
+      const polyCenter = { x: width * 0.8, y: height * 0.35 + Math.sin(time) * 20 };
+      const polyProjected = [];
+
+      for (let i = 0; i < polyVertices.length; i++) {
+        let v = polyVertices[i];
+        // Rotate Y
+        let x1 = v.x * Math.cos(rotY) - v.z * Math.sin(rotY);
+        let z1 = v.x * Math.sin(rotY) + v.z * Math.cos(rotY);
+        // Rotate X
+        let y2 = v.y * Math.cos(rotX) - z1 * Math.sin(rotX);
+        let z2 = v.y * Math.sin(rotX) + z1 * Math.cos(rotX);
+
+        const pScale = fov / (fov + z2 + 300);
+        const px = x1 * pScale + polyCenter.x;
+        const py = y2 * pScale + polyCenter.y;
+        polyProjected.push({ x: px, y: py, scale: pScale, z: z2 });
+      }
+
+      // Connect Polyhedron Vertices
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < polyProjected.length; i++) {
+        for (let j = i + 1; j < polyProjected.length; j++) {
+          const dx = polyProjected[i].x - polyProjected[j].x;
+          const dy = polyProjected[i].y - polyProjected[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.strokeStyle = 'rgba(0, 242, 255, ' + (0.2 * polyProjected[i].scale) + ')';
+            ctx.beginPath();
+            ctx.moveTo(polyProjected[i].x, polyProjected[i].y);
+            ctx.lineTo(polyProjected[j].x, polyProjected[j].y);
+            ctx.stroke();
+          }
+        }
       }
 
       requestAnimationFrame(render3D);
